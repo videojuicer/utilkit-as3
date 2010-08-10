@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" version="3">
+  <includeClasses>
+    <classEntry path="org.utilkit.crypto.Base64"/>
+    <classEntry path="org.utilkit.logger.LogMessage"/>
+    <classEntry path="org.utilkit.logger.Logger"/>
+    <classEntry path="org.utilkit.logger.LogLevel"/>
+    <classEntry path="org.utilkit.logger.renderers.LogRenderer"/>
+    <classEntry path="org.utilkit.logger.renderers.TraceRenderer"/>
+    <classEntry path="org.utilkit.logger.renderers.BrowserConsoleRenderer"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
