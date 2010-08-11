@@ -8,6 +8,11 @@
     <classEntry path="org.utilkit.logger.renderers.LogRenderer"/>
     <classEntry path="org.utilkit.logger.renderers.TraceRenderer"/>
     <classEntry path="org.utilkit.logger.renderers.BrowserConsoleRenderer"/>
+    <classEntry path="org.utilkit.util.ObjectUtil"/>
+    <classEntry path="org.utilkit.net.RedirectLoader"/>
+    <classEntry path="org.utilkit.parser.DataURIParser"/>
+    <classEntry path="org.utilkit.parser.FMSURLParser"/>
+    <classEntry path="org.utilkit.parser.URLParser"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
