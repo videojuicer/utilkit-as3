@@ -13,6 +13,9 @@
     <classEntry path="org.utilkit.parser.DataURIParser"/>
     <classEntry path="org.utilkit.parser.FMSURLParser"/>
     <classEntry path="org.utilkit.parser.URLParser"/>
+    <classEntry path="org.utilkit.crypto.MD5"/>
+    <classEntry path="org.utilkit.net.WebSocket"/>
+    <classEntry path="org.utilkit.net.WebSocketEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
