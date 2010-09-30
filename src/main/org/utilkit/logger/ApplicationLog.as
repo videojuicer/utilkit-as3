@@ -26,7 +26,7 @@ package org.utilkit.logger
 		
 		public function get applicationSignature():String
 		{
-			return this.applicationSignature;
+			return this._applicationSignature;
 		}
 		
 		public function error(message:String, targetObject:Object = null):void
