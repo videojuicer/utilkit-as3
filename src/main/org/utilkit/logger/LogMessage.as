@@ -9,12 +9,15 @@ package org.utilkit.logger
 		protected var _message:String;
 		protected var _targetObject:Object;
 		
-		public function LogMessage(message:String, targetObject:Object, level:String = null)
+		protected var _applicationSignature:String;
+		
+		public function LogMessage(message:String, targetObject:Object, level:String = null, applicationSignature:String = null)
 		{
 			this._message = message;
 			
 			this._level = level;
 			this._targetObject = targetObject;
+			this._applicationSignature = applicationSignature;
 			
 			if ((level == null || level== "") && message.charAt(1) == " ")
 			{
@@ -37,6 +40,11 @@ package org.utilkit.logger
 						break;
 				}
 			}
+		}
+		
+		public function get applicationSignature():String
+		{
+			return this._applicationSignature;
 		}
 		
 		/**

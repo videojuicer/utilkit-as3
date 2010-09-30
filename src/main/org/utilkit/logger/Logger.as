@@ -105,9 +105,9 @@ package org.utilkit.logger
 		 * @param message The message <code>String</code>
 		 * @param targetObject The target object associated with the log message.
 		 */
-		public static function error(message:String, targetObject:Object = null):void
+		public static function error(applicationSignature:String, message:String, targetObject:Object = null):void
 		{
-			Logger.log(message, targetObject, LogLevel.ERROR);
+			Logger.log(applicationSignature, message, targetObject, LogLevel.ERROR);
 		}
 		
 		/**
@@ -116,9 +116,9 @@ package org.utilkit.logger
 		 * @param message The message <code>String</code>
 		 * @param targetObject The target object associated with the log message.
 		 */
-		public static function warn(message:String, targetObject:Object = null):void
+		public static function warn(applicationSignature:String, message:String, targetObject:Object = null):void
 		{
-			Logger.log(message, targetObject, LogLevel.WARNING);
+			Logger.log(applicationSignature, message, targetObject, LogLevel.WARNING);
 		}
 		
 		/**
@@ -128,9 +128,9 @@ package org.utilkit.logger
 		 * @param message The message <code>String</code>
 		 * @param targetObject The target object associated with the log message.
 		 */
-		public static function fatal(message:String, targetObject:Object = null):void
+		public static function fatal(applicationSignature:String, message:String, targetObject:Object = null):void
 		{
-			Logger.log(message, targetObject, LogLevel.FATAL);
+			Logger.log(applicationSignature, message, targetObject, LogLevel.FATAL);
 		}
 		
 		/**
@@ -139,9 +139,9 @@ package org.utilkit.logger
 		 * @param message The message <code>String</code>
 		 * @param targetObject The target object associated with the log message.
 		 */
-		public static function info(message:String, targetObject:Object = null):void
+		public static function info(applicationSignature:String, message:String, targetObject:Object = null):void
 		{
-			Logger.log(message, targetObject, LogLevel.INFORMATION);
+			Logger.log(applicationSignature, message, targetObject, LogLevel.INFORMATION);
 		}
 		
 		/**
@@ -150,9 +150,9 @@ package org.utilkit.logger
 		 * @param message The message <code>String</code>
 		 * @param targetObject The target object associated with the log message.
 		 */
-		public static function debug(message:String, targetObject:Object = null):void
+		public static function debug(applicationSignature:String, message:String, targetObject:Object = null):void
 		{
-			Logger.log(message, targetObject, LogLevel.DEBUG);
+			Logger.log(applicationSignature, message, targetObject, LogLevel.DEBUG);
 		}
 		
 		/**
@@ -177,11 +177,11 @@ package org.utilkit.logger
 		 * @param targetObject The target object associated with the log message.
 		 * @param level Level of the log message. 
 		 */
-		public static function log(message:String, targetObject:Object = null, level:String = null):void
+		public static function log(applicationSignature:String, message:String, targetObject:Object = null, level:String = null):void
 		{
 			if(Logger._logRenderers != null)
 			{
-				var logMessage:LogMessage = new LogMessage(message, targetObject, level);
+				var logMessage:LogMessage = new LogMessage(message, targetObject, level, applicationSignature);
 				
 				// Stash in the history
 				if(Logger.retainLogs)
@@ -198,6 +198,8 @@ package org.utilkit.logger
 				{
 					var renderer:LogRenderer = Logger._logRenderers[i];
 					renderer.render(logMessage);
+					
+					trace(logMessage.toString());
 				}
 			}
 		}
