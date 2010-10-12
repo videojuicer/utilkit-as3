@@ -75,6 +75,10 @@ package org.utilkit.net
 			
 			this.initNoiseCharacters();
 			this.findOrigin();
+		}
+			
+		public function connect():void
+		{
 			this.loadPolicyFile();
 
 			this._socket = new Socket();
