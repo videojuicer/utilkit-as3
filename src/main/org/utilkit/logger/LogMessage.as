@@ -70,7 +70,7 @@ package org.utilkit.logger
 		 */
 		public function toString():String
 		{
-			var s:String = "["+LogLevel.stringForLevel(this._level)+"] "+this._message;
+			var s:String = "["+this.applicationSignature+"] "+LogLevel.stringForLevel(this._level)+" - "+this._message;
 			
 			if (this._targetObject != null)
 			{
