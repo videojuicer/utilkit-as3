@@ -198,8 +198,6 @@ package org.utilkit.logger
 				{
 					var renderer:LogRenderer = Logger._logRenderers[i];
 					renderer.render(logMessage);
-					
-					trace(logMessage.toString());
 				}
 			}
 		}
