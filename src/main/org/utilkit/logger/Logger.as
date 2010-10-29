@@ -34,6 +34,12 @@ package org.utilkit.logger
 		*/
 		protected static var _logHistory:String;
 		
+		/**
+		 * List of ignored applications, these applications will still be able to log to the Logger but 
+		 * wont be displayed in the renderers.
+		 */
+		protected static var _ignoreApplications:Vector.<String>;
+		
 		
 		public static function get retainLogs():Boolean
 		{
@@ -70,6 +76,16 @@ package org.utilkit.logger
 		public static function get logRenderers():Vector.<LogRenderer>
 		{
 			return Logger._logRenderers;
+		}
+		
+		public static function get ignoreApplications():Vector.<String>
+		{
+			return Logger._ignoreApplications;
+		}
+		
+		public static function set ignoreApplications(value:Vector.<String>):void
+		{
+			Logger._ignoreApplications = value;
 		}
 			
 		public static function addRenderer(renderer:LogRenderer):void
@@ -193,11 +209,14 @@ package org.utilkit.logger
 					Logger._logMessages.push(logMessage);
 				}
 				
-				// for now;
-				for(var i:uint = 0; i < Logger._logRenderers.length; i++)
+				if (Logger._ignoreApplications == null || Logger._ignoreApplications.indexOf(applicationSignature) == -1)
 				{
-					var renderer:LogRenderer = Logger._logRenderers[i];
-					renderer.render(logMessage);
+					// for now;
+					for(var i:uint = 0; i < Logger._logRenderers.length; i++)
+					{
+						var renderer:LogRenderer = Logger._logRenderers[i];
+						renderer.render(logMessage);
+					}
 				}
 			}
 		}
