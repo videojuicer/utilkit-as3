@@ -18,6 +18,8 @@
     <classEntry path="org.utilkit.net.WebSocketEvent"/>
     <classEntry path="org.utilkit.util.StringUtil"/>
     <classEntry path="org.utilkit.logger.ApplicationLog"/>
+    <classEntry path="org.utilkit.util.NumberHelper"/>
+    <classEntry path="org.utilkit.util.TimeHelper"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
