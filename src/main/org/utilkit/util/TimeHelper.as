@@ -6,11 +6,11 @@ package org.utilkit.util
 		{
 			var result:String = "";
 			
-			var seconds:int = Math.floor(milliseconds / 1000);
-			var minutes:int = Math.floor(seconds / 60);
-			seconds = seconds % 60;
+			var seconds:int = TimeHelper.millisecondsToSeconds(milliseconds);
+			var minutes:int = TimeHelper.millisecondsToMinutes(milliseconds);
+			var hours:int = TimeHelper.millisecondsToHours(milliseconds);
 			
-			var hours:int = Math.floor(minutes / 60);
+			seconds = seconds % 60;
 			minutes = minutes % 60;
 			
 			if (hours != 0)
@@ -22,6 +22,21 @@ package org.utilkit.util
 			result += NumberHelper.zeroPad(seconds, 2);
 			
 			return result;
+		}
+		
+		public static function millisecondsToHours(milliseconds:Number):int
+		{
+			return Math.floor(millisecondsToMinutes(milliseconds) / 60);
+		}
+		
+		public static function millisecondsToMinutes(milliseconds:Number):int
+		{
+			return Math.floor(millisecondsToSeconds(milliseconds) / 60);
+		}
+		
+		public static function millisecondsToSeconds(milliseconds:Number):int
+		{
+			return Math.floor(milliseconds / 1000);
 		}
 	}
 }
