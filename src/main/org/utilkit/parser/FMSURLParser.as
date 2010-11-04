@@ -64,6 +64,23 @@ package org.utilkit.parser
 			return this._streamType;
 		}
 		
+		public function get streamNameWithParameters():String
+		{
+			var params:String = "";
+			
+			for (var param:String in this.parameters)
+			{
+				params += param+"="+this.parameters[param]+"&";
+			}
+			
+			if (params != "")
+			{
+				params = "?"+params.substr(0, params.length - 1);
+			}
+			
+			return this._streamName+params;
+		}
+		
 		public override function parse(url:String):void
 		{
 			super.parse(url);
