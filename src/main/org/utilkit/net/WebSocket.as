@@ -15,6 +15,7 @@ package org.utilkit.net
 	
 	import mx.utils.URLUtil;
 	
+	import org.utilkit.UtilKit;
 	import org.utilkit.crypto.MD5;
 	import org.utilkit.net.WebSocketEvent;
 
@@ -93,14 +94,14 @@ package org.utilkit.net
 			
 			this._readyState = WebSocket.CONNECTING;
 			
-			trace("WebSocket connecting to "+this.hostname+" "+this.port);
+			UtilKit.logger.debug("WebSocket connecting to "+this.hostname+" "+this.port);
 			
 			this._socket.connect(this.hostname, this.port);
 		}
 		
 		protected function onSocketConnect(e:Event):void
 		{
-			trace("WebSocket received connect response, sending reply ...");
+			UtilKit.logger.debug("WebSocket received connect response, sending reply ...");
 			
 			var key1:String = this.generateKey();
 			var key2:String = this.generateKey();
@@ -120,11 +121,11 @@ package org.utilkit.net
 			
 			var header:String = headers.join("\r\n")+"\r\n\r\n";
 			
-			trace("Sending Header: \n"+header);
+			UtilKit.logger.debug("Sending Header: \n"+header);
 			
 			this._socket.writeUTFBytes(header);
 			
-			trace("Sending Key3: "+key3);
+			UtilKit.logger.debug("Sending Key3: "+key3);
 			
 			this.writeBytes(key3);
 
@@ -142,7 +143,7 @@ package org.utilkit.net
 		{
 			var position:int = this._buffer.length;
 		
-			trace("Received socket data from position: "+position);
+			UtilKit.logger.info("Received socket data from position: "+position);
 			
 			this._socket.readBytes(this._buffer, position);
 			
@@ -169,7 +170,7 @@ package org.utilkit.net
 						
 						var header:String = this._buffer.readUTFBytes(position + 1);
 						
-						trace("WebSocket Response Header: \n"+header);
+						UtilKit.logger.debug("WebSocket Response Header: \n"+header);
 						
 						// validate header
 						if (!this.validateHeader(header))
@@ -189,7 +190,7 @@ package org.utilkit.net
 						
 						var responseDigest:String = this.readBytes(this._buffer, 16);
 						
-						trace("Response digest: "+ responseDigest);
+						UtilKit.logger.debug("Response digest: "+ responseDigest);
 						
 						if (responseDigest != this._expectedDigest)
 						{
@@ -229,7 +230,7 @@ package org.utilkit.net
 						// were not just passing to JS and back so we dont want to encode the data
 						//data = encodeURIComponent(data);
 						
-						trace("Received data packet: "+ data);
+						UtilKit.logger.debug("Received data packet: "+ data);
 						
 						this._dataQueue.push(data);
 						
@@ -243,7 +244,7 @@ package org.utilkit.net
 					}
 					else if (position == 1 && this._buffer[0] == 0xff && this._buffer[1] == 0x00)
 					{
-						trace("Received closing data packet");
+						UtilKit.logger.debug("Received closing data packet");
 						
 						this.removeBufferBefore(position + 1);
 						
@@ -356,7 +357,7 @@ package org.utilkit.net
 		
 		protected function onSocketIOError(e:IOErrorEvent):void
 		{
-			trace("IO error occured on the Socket", e.text);
+			UtilKit.logger.error("IO error occured on the Socket", e.text);
 			
 			this.close();
 			
@@ -365,7 +366,7 @@ package org.utilkit.net
 		
 		protected function onSocketSecurityError(e:SecurityErrorEvent):void
 		{
-			trace("Security error occured on the Socket");
+			UtilKit.logger.error("Security error occured on the Socket");
 			
 			this.close();
 			
@@ -425,7 +426,7 @@ package org.utilkit.net
 				
 				this._socket.flush();
 				
-				trace("WebSocket connection sent data: "+data.toString());
+				UtilKit.logger.debug("WebSocket connection sent data: "+data.toString());
 				
 				return -1;
 			}
@@ -440,7 +441,7 @@ package org.utilkit.net
 			}
 			else
 			{
-				trace("WebSocket connection cannot send data, invalid state of '"+this.readyState+"'");
+				UtilKit.logger.error("WebSocket connection cannot send data, invalid state of '"+this.readyState+"'");
 			
 				return 0;
 			}
@@ -448,7 +449,7 @@ package org.utilkit.net
 		
 		public function close():void
 		{
-			trace("WebSocket has been asked to close");
+			UtilKit.logger.info("WebSocket has been asked to close");
 			
 			if (this.readyState != WebSocket.CLOSING && this.readyState != WebSocket.CLOSED)
 			{
@@ -476,7 +477,7 @@ package org.utilkit.net
 				this._noiseCharacters.push(String.fromCharCode(j));
 			}
 			
-			trace("Generated noise characters with "+this._noiseCharacters.length+" in the list");
+			UtilKit.logger.debug("Generated noise characters with "+this._noiseCharacters.length+" in the list");
 		}
 		
 		private function generateKey():String
@@ -502,7 +503,7 @@ package org.utilkit.net
 				key = key.substr(0, position) + " " + key.substr(position);
 			}
 			
-			trace("Generated WebSocket Key: "+key);
+			UtilKit.logger.debug("Generated WebSocket Key: "+key);
 			
 			return key;
 		}
@@ -516,7 +517,7 @@ package org.utilkit.net
 				key += String.fromCharCode(this.randomInt(0, 255));
 			}
 			
-			trace("Generated WebSocket Key3: "+key);
+			UtilKit.logger.debug("Generated WebSocket Key3: "+key);
 			
 			return key;
 		}
@@ -587,7 +588,7 @@ package org.utilkit.net
 		{
 			var policyUrl:String = "xmlsocket://"+this.hostname+":80";
 			
-			trace("Loading possible firewall safe policy file from: "+ policyUrl);
+			UtilKit.logger.debug("Loading possible firewall safe policy file from: "+ policyUrl);
 			
 			Security.loadPolicyFile(policyUrl);
 		}
