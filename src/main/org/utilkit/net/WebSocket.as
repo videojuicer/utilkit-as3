@@ -356,7 +356,7 @@ package org.utilkit.net
 		
 		protected function onSocketIOError(e:IOErrorEvent):void
 		{
-			trace("IO error occured on the Socket");
+			trace("IO error occured on the Socket", e.text);
 			
 			this.close();
 			
