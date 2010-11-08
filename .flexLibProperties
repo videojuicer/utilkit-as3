@@ -21,6 +21,7 @@
     <classEntry path="org.utilkit.util.NumberHelper"/>
     <classEntry path="org.utilkit.util.TimeHelper"/>
     <classEntry path="org.utilkit.UtilKit"/>
+    <classEntry path="org.utilkit.Version"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
