@@ -11,7 +11,7 @@ package org.utilkit.util
 				join = "?";
 			}
 			
-			return url + join + "v=" + Math.random();
+			return url + join + Math.random().toString().substr(2, 8) + "=1";
 		}
 	}
 }
