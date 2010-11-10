@@ -15,7 +15,7 @@ package org.utilkit.logger
 		/**
 		* A list of LogRenderer instances to which log output should be directed.
 		*/
-		protected static var _logRenderers:Vector.<LogRenderer>;
+		protected static var _logRenderers:Vector.<LogRenderer> = new Vector.<LogRenderer>();
 		
 		/**
 		* If set to true, the Logger will retain all log messages in an array that may be accessed for pasting to the clipboard, 
