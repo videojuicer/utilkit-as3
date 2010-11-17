@@ -66,19 +66,24 @@ package org.utilkit.parser
 		
 		public function get streamNameWithParameters():String
 		{
-			var params:String = "";
+			var queryString:String = "";
+			var params:Array = new Array();
 			
-			for (var param:String in this.parameters)
+			for (var i:int = (this.parameters.length - 1); i >= 0; i--)
 			{
-				params += param+"="+this.parameters[param]+"&";
+				var param:String = (this.parameters.getKeyAt(i) as String)+"="+(this.parameters.getItemAt(i) as String);
+				
+				params.push(param);
+			}
+
+			if (params.length > 0)
+			{
+				params.reverse();
+				
+				queryString = "?"+params.join("&");
 			}
 			
-			if (params != "")
-			{
-				params = "?"+params.substr(0, params.length - 1);
-			}
-			
-			return this._streamName+params;
+			return this._streamName+queryString;
 		}
 		
 		public override function parse(url:String):void

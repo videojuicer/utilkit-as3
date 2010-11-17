@@ -23,6 +23,8 @@
     <classEntry path="org.utilkit.UtilKit"/>
     <classEntry path="org.utilkit.Version"/>
     <classEntry path="org.utilkit.util.UrlUtil"/>
+    <classEntry path="org.utilkit.collection.Hashtable"/>
+    <classEntry path="org.utilkit.collection.List"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

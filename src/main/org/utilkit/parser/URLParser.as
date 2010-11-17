@@ -1,5 +1,7 @@
 package org.utilkit.parser
 {
+	import org.utilkit.collection.Hashtable;
+
 	/**
 	 * Parses a URL and provides helper properties for access to the different URL pieces.
 	 */ 
@@ -11,7 +13,7 @@ package org.utilkit.parser
 		protected var _port:String = "";
 		protected var _protocol:String = "";
 		protected var _path:String = "";
-		protected var _parameters:Object;
+		protected var _parameters:Hashtable;
 		
 		public function URLParser(url:String = null)
 		{
@@ -74,9 +76,9 @@ package org.utilkit.parser
 		}
 		
 		/**
-		 * The parameters as an <code>Object</code> from the parsed URL.
+		 * The parameters as an <code>Hashtable</code> from the parsed URL.
 		 */
-		public function get parameters():Object
+		public function get parameters():Hashtable
 		{
 			return this._parameters;
 		}
@@ -103,7 +105,7 @@ package org.utilkit.parser
 				return "";
 			}
 			
-			return this._parameters[param];
+			return this._parameters.getItem(param);
 		}
 		
 		/**
@@ -133,7 +135,7 @@ package org.utilkit.parser
 			
 			if (params != "")
 			{
-				this._parameters = new Object();
+				this._parameters = new Hashtable();
 				
 				if (params.charAt(0) == "?")
 				{
@@ -146,7 +148,7 @@ package org.utilkit.parser
 				{
 					var p:Array = s.split("=");
 					
-					this._parameters[p[0]] = p[1];
+					this._parameters.setItem(p[0], p[1]);
 				}
 			}
 		}
