@@ -426,7 +426,7 @@ package org.utilkit.net
 				
 				this._socket.flush();
 				
-				UtilKit.logger.debug("WebSocket connection sent data: "+data.toString());
+				UtilKit.logger.debug("WebSocket connection sent data, length of "+data.length+": "+data.toString());
 				
 				return -1;
 			}

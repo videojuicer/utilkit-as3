@@ -98,6 +98,36 @@ package org.utilkit.parser
 			return null;
 		}
 		
+		/**
+		 * The inline extension, available when a URL contains
+		 * the extension / file type in the path rather than at the end.
+		 * 
+		 * Looks for 'extension:' at the start of the path.
+		 */
+		public function get inlineExtension():String
+		{
+			var i:int = this.path.indexOf(":");
+			
+			if (i != -1)
+			{
+				var k:String = this.path.substr(0, i);
+				var s:int = k.lastIndexOf("/");
+				
+				if (s == -1)
+				{
+					s = 0;
+				}
+				else
+				{
+					s++;
+				}
+				
+				return k.substr(s, i);
+			}
+			
+			return null
+		}
+		
 		public function getParamValue(param:String):String
 		{
 			if (this._parameters == null)
