@@ -69,11 +69,14 @@ package org.utilkit.parser
 			var queryString:String = "";
 			var params:Array = new Array();
 			
-			for (var i:int = (this.parameters.length - 1); i >= 0; i--)
+			if (this.parameters != null)
 			{
-				var param:String = (this.parameters.getKeyAt(i) as String)+"="+(this.parameters.getItemAt(i) as String);
-				
-				params.push(param);
+				for (var i:int = (this.parameters.length - 1); i >= 0; i--)
+				{
+					var param:String = (this.parameters.getKeyAt(i) as String)+"="+(this.parameters.getItemAt(i) as String);
+					
+					params.push(param);
+				}
 			}
 
 			if (params.length > 0)
