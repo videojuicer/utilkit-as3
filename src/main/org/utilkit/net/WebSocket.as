@@ -235,9 +235,7 @@ package org.utilkit.net
 						UtilKit.logger.debug("Received data packet: "+ data);
 						
 						this._dataQueue.push(data);
-						
-						var obj:* = data.readObject();
-						
+
 						this.dispatchEvent(new WebSocketEvent(WebSocketEvent.MESSAGE, "Received data packet successfully", data));
 						
 						this.removeBufferBefore(position + 1);
