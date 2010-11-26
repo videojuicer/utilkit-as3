@@ -1,6 +1,8 @@
 package org.utilkit.util
 {
 	import flash.utils.ByteArray;
+	
+	import org.utilkit.crypto.Base64;
 
 	/**
 	 * ObjectManager provides a static helper that can be used to clone an <code>Object</code>.
@@ -43,6 +45,27 @@ package org.utilkit.util
 			}
 			
 			return to;
+		}
+		
+		public static function serialiseToString(value:Object):String
+		{
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeObject(value);
+			bytes.position = 0;
+			
+			var result:String = Base64.encodeByteArray(bytes);
+			
+			return result;
+		}
+		
+		
+		
+		public static function deserialiseFromString(value:String):Object
+		{
+			var bytes:ByteArray = Base64.decodeToByteArray(value);
+			bytes.position = 0;
+			
+			return bytes.readObject();
 		}
 	}
 }

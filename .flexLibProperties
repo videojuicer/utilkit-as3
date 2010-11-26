@@ -26,6 +26,7 @@
     <classEntry path="org.utilkit.collection.Hashtable"/>
     <classEntry path="org.utilkit.collection.List"/>
     <classEntry path="org.utilkit.util.Environment"/>
+    <classEntry path="org.utilkit.util.Hex"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

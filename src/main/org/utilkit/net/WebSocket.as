@@ -12,12 +12,14 @@ package org.utilkit.net
 	import flash.system.ApplicationDomain;
 	import flash.system.Security;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	
 	import mx.utils.URLUtil;
 	
 	import org.utilkit.UtilKit;
 	import org.utilkit.crypto.MD5;
 	import org.utilkit.net.WebSocketEvent;
+	import org.utilkit.util.Hex;
 
 	[Event(name="message", type="org.vjuicer.io.WebSocketEvent")]
 	[Event(name="open", type="org.vjuicer.io.WebSocketEvent")]
@@ -413,28 +415,60 @@ package org.utilkit.net
 			return this._origin;
 		}
 		
-		public function send(data:ByteArray):int
+		protected function writeData(data:*):void
 		{
-			// no need to decode as were not using JS data
-			//decodeURIComponent(data);
+			var length:uint = 0;
 			
+			if (data is String)
+			{
+				this._socket.writeUTFBytes(data);
+			}
+			else if (data is ByteArray)
+			{
+				this._socket.writeBytes(data);
+			}
+		}
+		
+		public function send(data:*):int
+		{
 			if (this.readyState == WebSocket.OPEN)
 			{
+				//UtilKit.logger.debug("HEX: "+Hex.dumpBytes(data));
+				
+				var length:uint = data.length;
+				
+				/*var head:ByteArray = new ByteArray();
+				head.endian = Endian.BIG_ENDIAN;
+				head.writeByte(0x00);
+				head.writeByte(0x00);
+				head.writeByte(0x00);
+				head.writeByte(0x00);
+				head.writeByte((length & 0xFF000000));
+				head.writeByte((length & 0x00FF0000));
+				head.writeByte((length & 0x0000FF00));
+				head.writeByte((length & 0x000000FF));*/
+				
+				UtilKit.logger.debug("WebSocket connection sent data, length of "+data.length+": "+data.toString());
+								
 				this._socket.writeByte(0x00);
-				this._socket.writeBytes(data);
+				//this._socket.writeBytes(head);
+				
+				this.writeData(data);
+				
+				//._socket.writeBytes(data);
 				this._socket.writeByte(0xff);
 				
 				this._socket.flush();
-				
-				UtilKit.logger.debug("WebSocket connection sent data, length of "+data.length+": "+data.toString());
-				
+
 				return -1;
 			}
 			else if (this.readyState == WebSocket.CLOSED)
 			{
 				var bytes:ByteArray = new ByteArray();
-				bytes.writeBytes(data);
+				//bytes.writeBytes(data);
 				
+				this.writeData(data);
+
 				this._bufferedAmount += bytes.length;
 				
 				return this._bufferedAmount;
