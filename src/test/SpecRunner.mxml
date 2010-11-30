@@ -7,7 +7,7 @@
 			import org.flexunit.runner.FlexUnitCore;
 			import org.flexunit.runner.Request;
 			
-			import org.utilkite.spec.UtilKitSuite;
+			import org.utilkit.spec.UtilKitSuite;
 			
 			protected var _core:FlexUnitCore;
 			
@@ -15,7 +15,7 @@
 			{
 				this._core = new FlexUnitCore();
 				this._core.addListener(new CIListener());
-				this._core.run(org.utilkite.spec.UtilKitSuite);
+				this._core.run(org.utilkit.spec.UtilKitSuite);
 			}
 	]]>
 	</mx:Script>

@@ -53,7 +53,19 @@ package org.utilkit.net
 		public static const CLOSING:uint = 2;
 		public static const CLOSED:uint = 3;
 		
-		public function WebSocket(url:String, protocols:Vector.<String> = null)
+		public function WebSocket(url:String = null, protocols:Vector.<String> = null)
+		{
+			this._socket = new Socket();
+			this._buffer = new ByteArray();
+			this._dataQueue = new Vector.<ByteArray>();
+			
+			if (url != null)
+			{
+				this.setup(url, protocols);
+			}
+		}
+		
+		public function setup(url:String, protocols:Vector.<String> = null):void
 		{
 			this._url = url;
 			
@@ -149,183 +161,74 @@ package org.utilkit.net
 			
 			this._socket.readBytes(this._buffer, position);
 			
-			for (; position < this._buffer.length; position++)
+			if (this._headerState <= 4)
 			{
-				if (this._headerState < 4)
+				// process head
+				var heads:Vector.<WebSocketHeadState> = this.processHeader(this._buffer, this._headerState, position);
+			
+				var headReadPosition:int = 0;
+				
+				for (var k:int = 0; k < heads.length; k++)
 				{
-					if ((this._headerState == 0 || this._headerState == 2) && this._buffer[position] == 0x0d)
-					{
-						this._headerState++;	
-					}
-					else if ((this._headerState == 1 || this._headerState == 3) && this._buffer[position] == 0x0a)
-					{
-						this._headerState++;
-					}
-					else
-					{
-						this._headerState = 0;
-					}
-					
-					if (this._headerState == 4)
-					{
-						this._buffer.position = 0;
-						
-						var header:String = this._buffer.readUTFBytes(position + 1);
-						
-						UtilKit.logger.debug("WebSocket Response Header: \n"+header);
-						
-						// validate header
-						if (!this.validateHeader(header))
-						{
-							return;	
-						}
-						
-						this.removeBufferBefore(position + 1);
-						position = -1;
-					}
-				}
-				else if (this._headerState == 4)
-				{
-					if (position == 15)
-					{
-						this._buffer.position = 0;
-						
-						var responseDigest:String = this.readBytes(this._buffer, 16);
-						
-						UtilKit.logger.debug("Response digest: "+ responseDigest);
-						
-						if (responseDigest != this._expectedDigest)
-						{
-							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Response digest '"+ responseDigest +"' does not match expected digest '"+ this._expectedDigest +"'"));
-							
-							return;
-						}
-						
-						this._headerState = 5;
-						this.removeBufferBefore(position + 1);
-						
-						position = -1;
-						
-						this._readyState = WebSocket.OPEN;
-						
-						this.dispatchEvent(new WebSocketEvent(WebSocketEvent.OPEN, "Socket connection successfully opened and verified"));
-					}
-				}
-				else
-				{
-					if (this._buffer[position] == 0xff && position > 0)
-					{
-						if (this._buffer[0] != 0x00)
-						{
-							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Data must start with \\x00"));
-							
-							return;
-						}
-						
-						this._buffer.position = 1;
-						
-						var data:ByteArray = new ByteArray();
-						
-						this._buffer.readBytes(data, 0, position - 1);
-						// .readUTFBytes(position - 1);
-						
-						// were not just passing to JS and back so we dont want to encode the data
-						//data = encodeURIComponent(data);
-						
-						UtilKit.logger.debug("Received data packet: "+ data);
-						
-						this._dataQueue.push(data);
+					var head:WebSocketHeadState = heads[k];
 
-						this.dispatchEvent(new WebSocketEvent(WebSocketEvent.MESSAGE, "Received data packet successfully", data));
-						
-						this.removeBufferBefore(position + 1);
-						
-						position = -1;
-					}
-					else if (position == 1 && this._buffer[0] == 0xff && this._buffer[1] == 0x00)
-					{
-						UtilKit.logger.debug("Received closing data packet");
-						
-						this.removeBufferBefore(position + 1);
-						
-						position = -1;
-						
-						this.close();
-					}
-				}
-			}
-		}
-		
-		protected function validateHeader(header:String):Boolean
-		{
-			var lines:Array = header.split(/\r\n/);
-			
-			if (!lines[0].match(/^HTTP\/1.1 101 /))
-			{
-				this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Bad response received: "+lines[0]));
-				
-				return false;
-			}
-			
-			var headers:Object = { };
-			
-			for (var i:int = 1; i < lines.length; i++)
-			{
-				if (lines[i].length == 0)
-				{
-					continue;
-				}
-				
-				var match:Array = lines[i].match(/^(\S+): (.*)$/);
-				
-				if (!match)
-				{
-					this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Failed to parse response header at line: "+ lines[i]));
+					UtilKit.logger.debug("WebSocket Header: "+head.state+" Message: "+head.message);
 					
-					return false;
+					switch (head.state)
+					{
+						case WebSocketState.STATE_HEAD_ERROR:
+							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, head.message));
+							break;
+						case WebSocketState.STATE_HEAD_OPEN:
+							this._headerState = head.state;
+							
+							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.OPEN, head.message));
+							break;
+					}
+					
+					if (head.position > headReadPosition)
+					{
+						headReadPosition = head.position;
+					}
 				}
 				
-				headers[match[1]] = match[2];
+				// remove the processed data from the buffer
+				this._buffer = WebSocket.removeBufferBefore(this._buffer, headReadPosition);
 			}
 			
-			if (headers["Upgrade"] != "WebSocket")
+			if (this._headerState > 4)
 			{
-				this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Invalid upgrade requested: "+ headers["Upgrade"]));
+				// process message
+				var states:Vector.<WebSocketState> = WebSocket.processMessage(this._buffer, position);
 				
-				return false;
-			}
-			
-			if (headers["Connection"] != "Upgrade")
-			{
-				this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Invalid connection requested: "+ headers["Connection"]));
+				var readPosition:int = 0;
 				
-				return false;
-			}
-			
-			if (!headers["Sec-WebSocket-Origin"])
-			{
-				if (headers["WebSocket-Origin"])
+				for (var i:int = 0; i < states.length; i++)
 				{
-					this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "WebSocket server is using an older protocol revision, WebSocket-as3 requires WebSocket protocol 76 or later in the server"));
-				}
-				else
-				{
-					this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Header response missing Sec-WebSocket-Origin"));
+					var state:WebSocketState = states[i];
+					
+					switch (state.state)
+					{
+						case WebSocketState.STATE_MESSAGE_ERROR:
+							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Data must start with \\x00"));
+							break;
+						case WebSocketState.STATE_MESSAGE_RECEIVED:
+							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.MESSAGE, "Received data packet successfully", state.data));
+							break;
+						case WebSocketState.STATE_MESSAGE_CLOSE:
+							this.close();
+							break;
+					}
+					
+					if (states[i].position > readPosition)
+					{
+						readPosition = state.position;
+					}
 				}
 				
-				return false;
+				// remove the processed data from the buffer
+				//this._buffer = WebSocket.removeBufferBefore(this._buffer, readPosition);
 			}
-			
-			var origin:String = headers["Sec-WebSocket-Origin"].toString().toLowerCase();
-			
-			if (origin != this.origin)
-			{
-				this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Origin from header '"+ origin +"' does not match request '"+ this.origin +"'"));
-				
-				return false;
-			}
-			
-			return true;
 		}
 		
 		protected function findOrigin():void
@@ -446,7 +349,7 @@ package org.utilkit.net
 				head.writeByte((length & 0x0000FF00));
 				head.writeByte((length & 0x000000FF));*/
 				
-				UtilKit.logger.debug("WebSocket connection sent data, length of "+data.length+": "+data.toString());
+				UtilKit.logger.debug("WebSocket connection sent data, length of "+data.length);
 								
 				this._socket.writeByte(0x00);
 				//this._socket.writeBytes(head);
@@ -586,23 +489,6 @@ package org.utilkit.net
 			return bytes;
 		}
 		
-		private function removeBufferBefore(position:uint):void
-		{
-			if (position == 0)
-			{
-				return;
-			}
-			
-			var nextBuffer:ByteArray = new ByteArray();
-			
-			// read from the specified position into the new buffer
-			this._buffer.position = position;
-			this._buffer.readBytes(nextBuffer);
-			
-			// swap buffers
-			this._buffer = nextBuffer;
-		}
-		
 		private function randomInt(minimum:uint, maximum:uint):uint
 		{
 			return minimum + Math.floor(Math.random() * (Number(maximum) - minimum + 1));
@@ -635,6 +521,224 @@ package org.utilkit.net
 			}
 			
 			return bytes;
+		}
+		
+		protected function processHeader(buffer:ByteArray, headerState:uint, position:int):Vector.<WebSocketHeadState>
+		{
+			var states:Vector.<WebSocketHeadState> = new Vector.<WebSocketHeadState>();
+			var offset:int = position;
+			
+			for (; offset < buffer.length; offset++)
+			{
+				if (headerState < 4)
+				{
+					if ((headerState == 0 || headerState == 2) && buffer[offset] == 0x0d)
+					{
+						headerState++;	
+					}
+					else if ((headerState == 1 || headerState == 3) && buffer[offset] == 0x0a)
+					{
+						headerState++;
+					}
+					else
+					{
+						headerState = 0;
+					}
+					
+					if (headerState == 4)
+					{
+						buffer.position = 0;
+						
+						var header:String = this._buffer.readUTFBytes(offset + 1);
+						
+						UtilKit.logger.debug("WebSocket Response Header: \n"+header);
+						
+						var headStates:Vector.<WebSocketHeadState> = WebSocket.validateHeader(header);
+						
+						// validate header
+						if (headStates.length > 0)
+						{
+							return headStates;	
+						}
+						
+						buffer = WebSocket.removeBufferBefore(buffer, offset + 1);
+						offset = -1;
+						
+						//this.removeBufferBefore(offset + 1);
+						//offset = -1;
+					}
+				}
+				else if (headerState == 4)
+				{
+					// or 15, if we remove the response header from the buffer before we look here
+					if (offset == 15)
+					{
+						//this._buffer.position = 0;
+						
+						var responseDigest:String = this.readBytes(buffer, 16);
+						
+						UtilKit.logger.debug("Response digest: "+ responseDigest);
+						
+						if (responseDigest != this._expectedDigest)
+						{
+							//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Response digest '"+ responseDigest +"' does not match expected digest '"+ this._expectedDigest +"'"));
+							states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, offset, "Response digest '"+ responseDigest +"' does not match expected digest '"+ this._expectedDigest +"'"));
+							
+							return states;
+						}
+						
+						headerState = 5;
+						
+						buffer = WebSocket.removeBufferBefore(buffer, offset + 1);
+						offset = -1;
+						
+						//this.removeBufferBefore(offset + 1);
+						
+						//offset = -1;
+						
+						this._readyState = WebSocket.OPEN;
+						
+						states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_OPEN, offset, "Socket connection successfully opened and verified"));
+						//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.OPEN, "Socket connection successfully opened and verified"));
+						
+						return states;
+					}
+				}
+			}
+			
+			return states;
+		}
+		
+		public static function processMessage(buffer:ByteArray, position:int):Vector.<WebSocketState>
+		{
+			var states:Vector.<WebSocketState> = new Vector.<WebSocketState>();
+			var offset:int = position;
+			
+			for (; offset < buffer.length; offset++)
+			{
+				if (buffer[offset] == 0xff && offset > 0)
+				{
+					if (buffer[0] != 0x00)
+					{
+						// "Data must start with \\x00"
+						states.push(new WebSocketState(WebSocketState.STATE_MESSAGE_ERROR, offset));
+						
+						break;
+					}
+					
+					buffer.position = 1;
+					
+					var data:ByteArray = new ByteArray();
+					
+					buffer.readBytes(data, 0, offset);
+					
+					//UtilKit.logger.debug("Received data packet: "+ data);
+					
+					//"Received data packet successfully"
+					states.push(new WebSocketState(WebSocketState.STATE_MESSAGE_RECEIVED, offset, data));
+					
+					
+					buffer = WebSocket.removeBufferBefore(buffer, offset + 1);
+					offset = -1;
+				}
+				else if (offset == 1 && buffer[0] == 0xff && buffer[1] == 0x00)
+				{
+					UtilKit.logger.debug("Received closing data packet");
+					
+					states.push(new WebSocketState(WebSocketState.STATE_MESSAGE_CLOSE, offset));
+					
+					break;
+				}
+			}
+			
+			return states;
+		}
+		
+		public static function validateHeader(header:String):Vector.<WebSocketHeadState>
+		{
+			var states:Vector.<WebSocketHeadState> = new Vector.<WebSocketHeadState>();
+			var lines:Array = header.split(/\r\n/);
+			
+			if (!lines[0].match(/^HTTP\/1.1 101 /))
+			{
+				//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, ));
+				states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, -1, "Bad response received: "+lines[0]));
+				
+				return states;
+			}
+			
+			var headers:Object = { };
+			
+			for (var i:int = 1; i < lines.length; i++)
+			{
+				if (lines[i].length == 0)
+				{
+					continue;
+				}
+				
+				var match:Array = lines[i].match(/^(\S+): (.*)$/);
+				
+				if (!match)
+				{
+					//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Failed to parse response header at line: "+ lines[i]));
+					states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, -1, "Failed to parse response header at line: "+ lines[i]));
+				}
+				
+				headers[match[1]] = match[2];
+			}
+			
+			if (headers["Upgrade"] != "WebSocket")
+			{
+				//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Invalid upgrade requested: "+ headers["Upgrade"]));
+				states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, -1, "Invalid upgrade requested: "+ headers["Upgrade"]));
+			}
+			
+			if (headers["Connection"] != "Upgrade")
+			{
+				//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Invalid connection requested: "+ headers["Connection"]));
+				states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, -1, "Invalid connection requested: "+ headers["Connection"]));
+			}
+			
+			if (!headers["Sec-WebSocket-Origin"])
+			{
+				if (headers["WebSocket-Origin"])
+				{
+					//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "WebSocket server is using an older protocol revision, WebSocket-as3 requires WebSocket protocol 76 or later in the server"));
+					states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, -1, "WebSocket server is using an older protocol revision, WebSocket requires WebSocket protocol 76 or later in the server"));
+				}
+				else
+				{
+					//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Header response missing Sec-WebSocket-Origin"));
+					states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, -1, "Header response missing Sec-WebSocket-Origin"));
+				}
+			}
+			
+			var origin:String = headers["Sec-WebSocket-Origin"].toString().toLowerCase();
+			
+			//if (origin != this.origin)
+			//{
+			//this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Origin from header '"+ origin +"' does not match request '"+ this.origin +"'"));
+			//	states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_ERROR, -1, "Origin from header '"+ origin +"' does not match request '"+ this.origin +"'"));
+			//}
+			
+			return states;
+		}
+		
+		private static function removeBufferBefore(buffer:ByteArray, position:uint):ByteArray
+		{			
+			var nextBuffer:ByteArray = new ByteArray();
+
+			if (position == 0)
+			{
+				return nextBuffer;
+			}
+			
+			// read from the specified position into the new buffer
+			buffer.position = position;
+			buffer.readBytes(nextBuffer);
+			
+			// return new buffer (to swap with the old one)
+			return nextBuffer;
 		}
 	}
 }

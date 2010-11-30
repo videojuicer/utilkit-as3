@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
+    <classEntry path="org.utilkit.UtilKit"/>
+    <classEntry path="org.utilkit.Version"/>
+    <classEntry path="org.utilkit.collection.Hashtable"/>
+    <classEntry path="org.utilkit.collection.List"/>
     <classEntry path="org.utilkit.crypto.Base64"/>
+    <classEntry path="org.utilkit.crypto.MD5"/>
+    <classEntry path="org.utilkit.logger.ApplicationLog"/>
+    <classEntry path="org.utilkit.logger.LogLevel"/>
     <classEntry path="org.utilkit.logger.LogMessage"/>
     <classEntry path="org.utilkit.logger.Logger"/>
-    <classEntry path="org.utilkit.logger.LogLevel"/>
+    <classEntry path="org.utilkit.logger.renderers.BrowserConsoleRenderer"/>
     <classEntry path="org.utilkit.logger.renderers.LogRenderer"/>
     <classEntry path="org.utilkit.logger.renderers.TraceRenderer"/>
-    <classEntry path="org.utilkit.logger.renderers.BrowserConsoleRenderer"/>
-    <classEntry path="org.utilkit.util.ObjectUtil"/>
     <classEntry path="org.utilkit.net.RedirectLoader"/>
+    <classEntry path="org.utilkit.net.WebSocket"/>
+    <classEntry path="org.utilkit.net.WebSocketEvent"/>
     <classEntry path="org.utilkit.parser.DataURIParser"/>
     <classEntry path="org.utilkit.parser.FMSURLParser"/>
     <classEntry path="org.utilkit.parser.URLParser"/>
-    <classEntry path="org.utilkit.crypto.MD5"/>
-    <classEntry path="org.utilkit.net.WebSocket"/>
-    <classEntry path="org.utilkit.net.WebSocketEvent"/>
-    <classEntry path="org.utilkit.util.StringUtil"/>
-    <classEntry path="org.utilkit.logger.ApplicationLog"/>
-    <classEntry path="org.utilkit.util.NumberHelper"/>
-    <classEntry path="org.utilkit.util.TimeHelper"/>
-    <classEntry path="org.utilkit.UtilKit"/>
-    <classEntry path="org.utilkit.Version"/>
-    <classEntry path="org.utilkit.util.UrlUtil"/>
-    <classEntry path="org.utilkit.collection.Hashtable"/>
-    <classEntry path="org.utilkit.collection.List"/>
     <classEntry path="org.utilkit.util.Environment"/>
     <classEntry path="org.utilkit.util.Hex"/>
+    <classEntry path="org.utilkit.util.NumberHelper"/>
+    <classEntry path="org.utilkit.util.ObjectUtil"/>
+    <classEntry path="org.utilkit.util.StringUtil"/>
+    <classEntry path="org.utilkit.util.TimeHelper"/>
+    <classEntry path="org.utilkit.util.UrlUtil"/>
+    <classEntry path="SpecRunner"/>
+    <classEntry path="org.utilkit.spec.UtilKitSuite"/>
+    <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
+    <classEntry path="org.utilkit.net.WebSocketState"/>
+    <classEntry path="org.utilkit.net.WebSocketHeadState"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
