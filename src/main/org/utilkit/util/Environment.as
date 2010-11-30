@@ -19,10 +19,17 @@ package org.utilkit.util
 			
 			if (hostname == null || hostname == "")
 			{
-				if (Environment.embeddedURL.indexOf("file://") != -1)
+				var embeddedURL:String = Environment.embeddedURL;
+				
+				if (embeddedURL != null && embeddedURL.indexOf("file://") != -1)
 				{
 					hostname = "localhost";
 				}
+			}
+			
+			if (hostname == null)
+			{
+				hostname = "unknown";
 			}
 			
 			return hostname;
