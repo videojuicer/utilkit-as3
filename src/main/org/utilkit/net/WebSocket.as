@@ -226,8 +226,12 @@ package org.utilkit.net
 					}
 				}
 				
+				UtilKit.logger.info("WebSocket - Buffer clean requested on "+this._buffer.length+", removing from "+readPosition);
+				
 				// remove the processed data from the buffer
-				//this._buffer = WebSocket.removeBufferBefore(this._buffer, readPosition);
+				this._buffer = WebSocket.removeBufferBefore(this._buffer, readPosition + 1);
+				
+				UtilKit.logger.info("WebSocket - Buffer cleaned to "+this._buffer.length+"");
 			}
 		}
 		
@@ -337,26 +341,11 @@ package org.utilkit.net
 				//UtilKit.logger.debug("HEX: "+Hex.dumpBytes(data));
 				
 				var length:uint = data.length;
-				
-				/*var head:ByteArray = new ByteArray();
-				head.endian = Endian.BIG_ENDIAN;
-				head.writeByte(0x00);
-				head.writeByte(0x00);
-				head.writeByte(0x00);
-				head.writeByte(0x00);
-				head.writeByte((length & 0xFF000000));
-				head.writeByte((length & 0x00FF0000));
-				head.writeByte((length & 0x0000FF00));
-				head.writeByte((length & 0x000000FF));*/
-				
+
 				UtilKit.logger.debug("WebSocket connection sent data, length of "+data.length);
 								
 				this._socket.writeByte(0x00);
-				//this._socket.writeBytes(head);
-				
 				this.writeData(data);
-				
-				//._socket.writeBytes(data);
 				this._socket.writeByte(0xff);
 				
 				this._socket.flush();
@@ -613,33 +602,37 @@ package org.utilkit.net
 		{
 			var states:Vector.<WebSocketState> = new Vector.<WebSocketState>();
 			var offset:int = position;
+			var firstBytePosition:int = 0;
 			
 			for (; offset < buffer.length; offset++)
 			{
-				if (buffer[offset] == 0xff && offset > 0)
+				if (buffer[offset] == 0x00)
 				{
-					if (buffer[0] != 0x00)
+					firstBytePosition = offset;
+				}
+				else if (buffer[offset] == 0xff && offset > 0)
+				{
+					if (buffer[firstBytePosition] != 0x00)
 					{
 						// "Data must start with \\x00"
 						states.push(new WebSocketState(WebSocketState.STATE_MESSAGE_ERROR, offset));
 						
-						break;
+						// We dont break, as there might be a useful message after this lump of crap?
+						continue;
 					}
 					
-					buffer.position = 1;
+					// skip the first byte of the message
+					buffer.position = firstBytePosition + 1;
 					
 					var data:ByteArray = new ByteArray();
+					var length:int = (offset - firstBytePosition);
 					
-					buffer.readBytes(data, 0, offset);
+					buffer.readBytes(data, 0, length);
 					
 					//UtilKit.logger.debug("Received data packet: "+ data);
 					
 					//"Received data packet successfully"
 					states.push(new WebSocketState(WebSocketState.STATE_MESSAGE_RECEIVED, offset, data));
-					
-					
-					buffer = WebSocket.removeBufferBefore(buffer, offset + 1);
-					offset = -1;
 				}
 				else if (offset == 1 && buffer[0] == 0xff && buffer[1] == 0x00)
 				{
@@ -736,6 +729,8 @@ package org.utilkit.net
 			// read from the specified position into the new buffer
 			buffer.position = position;
 			buffer.readBytes(nextBuffer);
+			
+			nextBuffer.position = 0;
 			
 			// return new buffer (to swap with the old one)
 			return nextBuffer;

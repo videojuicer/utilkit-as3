@@ -1,6 +1,8 @@
 package org.utilkit.util
 {
 	import flash.external.ExternalInterface;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 
 	public class Environment
 	{
@@ -59,6 +61,16 @@ package org.utilkit.util
 			}
 			
 			return result;
+		}
+		
+		public static function openWindow(request:URLRequest, target:String = "_blank"):void
+		{
+			navigateToURL(request, target);
+		}
+		
+		public static function openWindowUrl(url:String, target:String = "_blank"):void
+		{	
+			Environment.openWindow(new URLRequest(url), target);
 		}
 	}
 }
