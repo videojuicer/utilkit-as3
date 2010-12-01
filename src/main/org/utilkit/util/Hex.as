@@ -23,5 +23,10 @@ package org.utilkit.util
 			
 			return result;
 		}
+		
+		public static function rgbToHex(red:int, green:int, blue:int):uint
+		{
+			return (red << 16 ^ green << 8 ^ blue);
+		}
 	}
 }
