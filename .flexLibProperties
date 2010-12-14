@@ -32,6 +32,7 @@
     <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
     <classEntry path="org.utilkit.net.WebSocketState"/>
     <classEntry path="org.utilkit.net.WebSocketHeadState"/>
+    <classEntry path="org.utilkit.util.BooleanHelper"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
