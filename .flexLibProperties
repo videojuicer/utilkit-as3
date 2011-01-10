@@ -33,6 +33,9 @@
     <classEntry path="org.utilkit.net.WebSocketState"/>
     <classEntry path="org.utilkit.net.WebSocketHeadState"/>
     <classEntry path="org.utilkit.util.BooleanHelper"/>
+    <classEntry path="mx.core.SpriteAsset"/>
+    <classEntry path="mx.core.ByteArrayAsset"/>
+    <classEntry path="mx.core.MovieClipLoaderAsset"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
