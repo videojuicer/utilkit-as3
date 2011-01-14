@@ -10,5 +10,10 @@ package org.utilkit
 		{
 			return UtilKit.__applicationLog;
 		}
+		
+		public static function get version():String
+		{
+			return "0.0.2";
+		}
 	}
 }
