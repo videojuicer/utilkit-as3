@@ -94,7 +94,7 @@ package org.utilkit.net
 			
 		public function connect():void
 		{
-			this.loadPolicyFile();
+			//this.loadPolicyFile();
 
 			this._socket = new Socket();
 			this._buffer = new ByteArray();
