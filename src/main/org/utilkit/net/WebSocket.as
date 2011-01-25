@@ -1,5 +1,7 @@
 package org.utilkit.net
 {
+	import com.hurlant.crypto.tls.TLSSocket;
+	
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -63,6 +65,8 @@ package org.utilkit.net
 			{
 				this.setup(url, protocols);
 			}
+			
+			
 		}
 		
 		public function setup(url:String, protocols:Vector.<String> = null):void
