@@ -1,5 +1,8 @@
 package org.utilkit.net
 {
+	import com.hurlant.crypto.tls.TLSConfig;
+	import com.hurlant.crypto.tls.TLSEngine;
+	import com.hurlant.crypto.tls.TLSSecurityParameters;
 	import com.hurlant.crypto.tls.TLSSocket;
 	
 	import flash.errors.IllegalOperationError;
@@ -40,8 +43,10 @@ package org.utilkit.net
 		protected var _expectedDigest:String;
 		protected var _buffer:ByteArray;
 		protected var _dataQueue:Vector.<ByteArray>;
-		
+
 		protected var _socket:Socket;
+		protected var _secureSocket:TLSSocket;
+		protected var _secureConfiguration:TLSConfig;
 		
 		protected var _readyState:uint = WebSocket.CONNECTING;
 		protected var _headerState:uint = WebSocket.CONNECTING;
@@ -65,8 +70,6 @@ package org.utilkit.net
 			{
 				this.setup(url, protocols);
 			}
-			
-			
 		}
 		
 		public function setup(url:String, protocols:Vector.<String> = null):void
@@ -85,7 +88,7 @@ package org.utilkit.net
 			this._port = parseInt(matches[4] || "80");
 			this._path = matches[5] || "/";
 			
-			if (this.protocol.toLowerCase() != "ws")
+			if (this.protocol.toLowerCase() != "ws" && this.protocol.toLowerCase() != "wss")
 			{
 				throw new IllegalOperationError(this.protocol+" protocol not supported.");
 				
@@ -104,7 +107,18 @@ package org.utilkit.net
 			this._buffer = new ByteArray();
 			this._dataQueue = new Vector.<ByteArray>();
 			
-			this._socket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
+			if (this.protocol == "wss")
+			{
+				this._secureConfiguration = new TLSConfig(TLSEngine.CLIENT, null, null, null, null);
+				
+				this._secureSocket = new TLSSocket();
+				this._secureSocket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
+			}
+			else
+			{
+				this._socket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
+			}
+			
 			this._socket.addEventListener(Event.CONNECT, this.onSocketConnect);
 			this._socket.addEventListener(Event.CLOSE, this.onSocketClose);
 			this._socket.addEventListener(IOErrorEvent.IO_ERROR, this.onSocketIOError);
@@ -120,6 +134,11 @@ package org.utilkit.net
 		protected function onSocketConnect(e:Event):void
 		{
 			UtilKit.logger.debug("WebSocket received connect response, sending reply ...");
+			
+			if (this.protocol == "wss")
+			{
+				this._secureSocket.startTLS(this._socket, this.hostname, this._secureConfiguration);
+			}
 			
 			var key1:String = this.generateKey();
 			var key2:String = this.generateKey();
@@ -141,13 +160,13 @@ package org.utilkit.net
 			
 			UtilKit.logger.debug("Sending Header: \n"+header);
 			
-			this._socket.writeUTFBytes(header);
+			this.socket.writeUTFBytes(header);
 			
 			UtilKit.logger.debug("Sending Key3: "+key3);
 			
 			this.writeBytes(key3);
 
-			this._socket.flush();
+			this.socket.flush();
 		}
 		
 		protected function onSocketClose(e:Event):void
@@ -163,7 +182,7 @@ package org.utilkit.net
 		
 			UtilKit.logger.info("Received socket data from position: "+position);
 			
-			this._socket.readBytes(this._buffer, position);
+			this.socket.readBytes(this._buffer, position);
 			
 			if (this._headerState <= 4)
 			{
@@ -324,17 +343,27 @@ package org.utilkit.net
 			return this._origin;
 		}
 		
+		protected function get socket():Socket
+		{
+			if (this.protocol == "wss")
+			{
+				return (this._secureSocket as Socket);
+			}
+			
+			return this._socket;
+		}
+		
 		protected function writeData(data:*):void
 		{
 			var length:uint = 0;
 			
 			if (data is String)
 			{
-				this._socket.writeUTFBytes(data);
+				this.socket.writeUTFBytes(data);
 			}
 			else if (data is ByteArray)
 			{
-				this._socket.writeBytes(data);
+				this.socket.writeBytes(data);
 			}
 		}
 		
@@ -348,11 +377,11 @@ package org.utilkit.net
 
 				UtilKit.logger.debug("WebSocket connection sent data, length of "+data.length);
 								
-				this._socket.writeByte(0x00);
+				this.socket.writeByte(0x00);
 				this.writeData(data);
-				this._socket.writeByte(0xff);
+				this.socket.writeByte(0xff);
 				
-				this._socket.flush();
+				this.socket.flush();
 
 				return -1;
 			}
@@ -383,11 +412,11 @@ package org.utilkit.net
 			{
 				this._readyState = WebSocket.CLOSING;
 
-				this._socket.writeByte(0xff);
-				this._socket.writeByte(0x00);
+				this.socket.writeByte(0xff);
+				this.socket.writeByte(0x00);
 				
-				this._socket.flush();
-				this._socket.close();
+				this.socket.flush();
+				this.socket.close();
 			}
 		}
 		
@@ -491,7 +520,7 @@ package org.utilkit.net
 		{
 			for (var i:int = 0; i < bytes.length; i++)
 			{
-				this._socket.writeByte(bytes.charCodeAt(i));
+				this.socket.writeByte(bytes.charCodeAt(i));
 			}
 		}
 		

@@ -40,6 +40,8 @@ package org.utilkit.logger
 		 */
 		protected static var _ignoreApplications:Vector.<String>;
 		
+		protected static var _alwaysBenchmark:Boolean = true;
+		
 		
 		public static function get retainLogs():Boolean
 		{
@@ -186,6 +188,16 @@ package org.utilkit.logger
 			return "Memory Snapshot: "+memoryMB+" MB ("+memorykB+" kB)";
 		}
 		
+		public static function benchmark(applicationSignature:String, message:String, targetObject:Object = null):void
+		{
+			var date:Date = new Date();
+			var timeString:String = date.hoursUTC+":"+date.minutesUTC+":"+date.secondsUTC+":"+date.millisecondsUTC;
+			
+			message = timeString+" - "+message;
+			
+			Logger.log(applicationSignature, message, targetObject, LogLevel.BENCHMARK);
+		}
+		
 		/**
 		 * Actually stores and prints the log message in the Logger.
 		 * 
@@ -209,7 +221,7 @@ package org.utilkit.logger
 					Logger._logMessages.push(logMessage);
 				}
 				
-				if (Logger._ignoreApplications == null || Logger._ignoreApplications.indexOf(applicationSignature) == -1)
+				if (Logger._ignoreApplications == null || Logger._ignoreApplications.indexOf(applicationSignature) == -1 || (level == LogLevel.BENCHMARK && Logger._alwaysBenchmark))
 				{
 					// for now;
 					for(var i:uint = 0; i < Logger._logRenderers.length; i++)

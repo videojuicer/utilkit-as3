@@ -11,6 +11,7 @@ package org.utilkit.logger
 		public static var ERROR:String = "logMessageError";
 		public static var FATAL:String = "logMessageFatal";
 		public static var DEBUG:String = "logMessageDebug";
+		public static var BENCHMARK:String = "logMessageBenchmark";
 		
 		/**
 		 * Returns an integer index for the specified string level.
@@ -35,6 +36,9 @@ package org.utilkit.logger
 					break;
 				case LogLevel.DEBUG:
 					return 5;
+					break;
+				case LogLevel.BENCHMARK:
+					return 6;
 					break;
 			}
 			
@@ -64,6 +68,9 @@ package org.utilkit.logger
 					break;
 				case LogLevel.DEBUG:
 					return "Debug";
+					break;
+				case LogLevel.BENCHMARK:
+					return "Benchmark";
 					break;
 			}
 			

@@ -58,5 +58,10 @@ package org.utilkit.logger
 		{
 			Logger.log(this.applicationSignature, message, targetObject);
 		}
+		
+		public function benchmark(message:String, targetObject:Object = null):void
+		{
+			Logger.benchmark(this.applicationSignature, message, targetObject);
+		}
 	}
 }
