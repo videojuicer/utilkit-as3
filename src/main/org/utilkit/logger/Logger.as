@@ -42,6 +42,7 @@ package org.utilkit.logger
 		
 		protected static var _alwaysBenchmark:Boolean = true;
 		
+		protected static var _lastBenchmark:Date = null;
 		
 		public static function get retainLogs():Boolean
 		{
@@ -192,8 +193,14 @@ package org.utilkit.logger
 		{
 			var date:Date = new Date();
 			var timeString:String = date.hoursUTC+":"+date.minutesUTC+":"+date.secondsUTC+":"+date.millisecondsUTC;
+			var timeTaken:Number = 0;
 			
-			message = timeString+" - "+message;
+			if (Logger._lastBenchmark != null)
+			{
+				timeTaken = Logger._lastBenchmark.time - date.time;
+			}
+			
+			message = timeString+" ("+timeTaken+"ms) - "+message;
 			
 			Logger.log(applicationSignature, message, targetObject, LogLevel.BENCHMARK);
 		}
