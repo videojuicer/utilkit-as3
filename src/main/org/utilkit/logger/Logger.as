@@ -90,6 +90,16 @@ package org.utilkit.logger
 		{
 			Logger._ignoreApplications = value;
 		}
+		
+		public static function get alwaysBenchmark():Boolean
+		{
+			return Logger._alwaysBenchmark;
+		}
+		
+		public static function set alwaysBenchmark(value:Boolean):void
+		{
+			Logger._alwaysBenchmark = value;
+		}
 			
 		public static function addRenderer(renderer:LogRenderer):void
 		{
