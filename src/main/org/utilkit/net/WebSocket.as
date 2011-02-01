@@ -110,6 +110,9 @@ package org.utilkit.net
 			if (this.protocol == "wss")
 			{
 				this._secureConfiguration = new TLSConfig(TLSEngine.CLIENT, null, null, null, null);
+				this._secureConfiguration.trustAllCertificates = true;
+				this._secureConfiguration.trustSelfSignedCertificates = true;
+				this._secureConfiguration.ignoreCommonNameMismatch = true;
 				
 				this._secureSocket = new TLSSocket();
 				this._secureSocket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
