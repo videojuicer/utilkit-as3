@@ -207,12 +207,14 @@ package org.utilkit.logger
 			
 			if (Logger._lastBenchmark != null)
 			{
-				timeTaken = Logger._lastBenchmark.time - date.time;
+				timeTaken = date.time - Logger._lastBenchmark.time;
 			}
 			
 			message = timeString+" ("+timeTaken+"ms) - "+message;
 			
 			Logger.log(applicationSignature, message, targetObject, LogLevel.BENCHMARK);
+			
+			Logger._lastBenchmark = date;
 		}
 		
 		/**

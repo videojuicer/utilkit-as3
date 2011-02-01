@@ -140,6 +140,7 @@ package org.utilkit.net
 			
 			if (this.protocol == "wss")
 			{
+				UtilKit.logger.benchmark("Starting TLS on WebSocket connection ..");
 				this._secureSocket.startTLS(this._socket, this.hostname, this._secureConfiguration);
 			}
 			
@@ -169,6 +170,7 @@ package org.utilkit.net
 			
 			this.writeBytes(key3);
 
+			UtilKit.logger.benchmark("Header sent and socket flushed");
 			this.socket.flush();
 		}
 		
@@ -183,14 +185,16 @@ package org.utilkit.net
 		{
 			var position:int = this._buffer.length;
 		
-			UtilKit.logger.info("Received socket data from position: "+position);
+			UtilKit.logger.benchmark("Received socket data from "+position+" starting to process messages");
 			
 			this.socket.readBytes(this._buffer, position);
+			
+			UtilKit.logger.benchmark("Finished creating buffer with a total length of "+this._buffer.length);
 			
 			if (this._headerState <= 4)
 			{
 				// process head
-				var heads:Vector.<WebSocketHeadState> = this.processHeader(this._buffer, this._headerState, position);
+				var heads:Vector.<WebSocketHeadState> = this.processHeader(this._buffer, position);
 			
 				var headReadPosition:int = 0;
 				
@@ -548,29 +552,29 @@ package org.utilkit.net
 			return bytes;
 		}
 		
-		protected function processHeader(buffer:ByteArray, headerState:uint, position:int):Vector.<WebSocketHeadState>
+		protected function processHeader(buffer:ByteArray, position:int):Vector.<WebSocketHeadState>
 		{
 			var states:Vector.<WebSocketHeadState> = new Vector.<WebSocketHeadState>();
 			var offset:int = position;
 			
 			for (; offset < buffer.length; offset++)
 			{
-				if (headerState < 4)
+				if (this._headerState < 4)
 				{
-					if ((headerState == 0 || headerState == 2) && buffer[offset] == 0x0d)
+					if ((this._headerState == 0 || this._headerState == 2) && buffer[offset] == 0x0d)
 					{
-						headerState++;	
+						this._headerState++;	
 					}
-					else if ((headerState == 1 || headerState == 3) && buffer[offset] == 0x0a)
+					else if ((this._headerState == 1 || this._headerState == 3) && buffer[offset] == 0x0a)
 					{
-						headerState++;
+						this._headerState++;
 					}
 					else
 					{
-						headerState = 0;
+						this._headerState = 0;
 					}
 					
-					if (headerState == 4)
+					if (this._headerState == 4)
 					{
 						buffer.position = 0;
 						
@@ -593,7 +597,7 @@ package org.utilkit.net
 						//offset = -1;
 					}
 				}
-				else if (headerState == 4)
+				else if (this._headerState == 4)
 				{
 					// or 15, if we remove the response header from the buffer before we look here
 					if (offset == 15)
@@ -612,7 +616,7 @@ package org.utilkit.net
 							return states;
 						}
 						
-						headerState = 5;
+						this._headerState = 5;
 						
 						buffer = WebSocket.removeBufferBefore(buffer, offset + 1);
 						offset = -1;
