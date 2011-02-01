@@ -16,6 +16,9 @@
 	<property name="report.flexcover.loc" location="${report.loc}/flexcover" />
 	<property name="report.unit.loc" location="${report.loc}/unit" />
 	
+	<property name="as3crypto.loc" location="${lib.loc}/as3crypto" />
+	<property name="as3crypto.src.loc" location="${lib.loc}/as3crypto/src" />
+	
 	<property name="FLEX_HOME" location="${env.FLEX_HOME}" />
 	<property name="FLEX_HEADLESS" location="${env.headless}" />
 	
@@ -38,6 +41,7 @@
 		
 		<!-- delete flex builder builds -->
 		<delete dir="${basedir}/bin" />
+		<delete dir="${as3crypto.loc}" />
 		<delete dir="${output.loc}" />
 	</target>
 	
@@ -73,6 +77,14 @@
 			<compiler.headless-server>true</compiler.headless-server>
 		</mxmlc>
 	</target>
+	
+	<target name="fetch-crypto" description="Fetches the AS3 Crypto from subversion and exports into libs/">
+	  <exec executable="svn" spawn="false" dir="${basedir}">
+	    <arg line="export" />
+	    <arg line="http://as3crypto.googlecode.com/svn/trunk/as3crypto/" />
+	    <arg line="${as3crypto.loc}" />
+	  </exec>
+  </target>
 
 	<target name="asdocs" description="Generates asdocs from the UtilKit-as3 source">
 		<delete file="${main.src.loc}/FlexUnitApplication.mxml" />
@@ -88,6 +100,7 @@
 	
 	<target name="build">
 		<antcall target="clean" />
+		<antcall target="fetch-crypto" />
 		<antcall target="compile" />
 		<antcall target="test-only" />
 		<antcall target="asdocs" />
