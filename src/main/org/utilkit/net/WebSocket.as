@@ -189,6 +189,10 @@ package org.utilkit.net
 			
 			this.socket.readBytes(this._buffer, position);
 			
+			// reset the position so we always read from the begining of the stack, just incase the last batch of messages
+			// we processed contained the starting byte sequence for our new batch
+			position = 0;
+			
 			UtilKit.logger.benchmark("Finished creating buffer with a total length of "+this._buffer.length);
 			
 			if (this._headerState <= 4)
@@ -259,7 +263,7 @@ package org.utilkit.net
 				UtilKit.logger.info("WebSocket - Buffer clean requested on "+this._buffer.length+", removing from "+readPosition);
 				
 				// remove the processed data from the buffer
-				this._buffer = WebSocket.removeBufferBefore(this._buffer, readPosition + 1);
+				this._buffer = WebSocket.removeBufferBefore(this._buffer, readPosition);
 				
 				UtilKit.logger.info("WebSocket - Buffer cleaned to "+this._buffer.length+"");
 			}
@@ -621,10 +625,6 @@ package org.utilkit.net
 						buffer = WebSocket.removeBufferBefore(buffer, offset + 1);
 						offset = -1;
 						
-						//this.removeBufferBefore(offset + 1);
-						
-						//offset = -1;
-						
 						this._readyState = WebSocket.OPEN;
 						
 						states.push(new WebSocketHeadState(WebSocketState.STATE_HEAD_OPEN, offset, "Socket connection successfully opened and verified"));
@@ -641,19 +641,25 @@ package org.utilkit.net
 		public static function processMessage(buffer:ByteArray, position:int):Vector.<WebSocketState>
 		{
 			var states:Vector.<WebSocketState> = new Vector.<WebSocketState>();
-			var offset:int = position;
-			var firstBytePosition:int = 0;
+			var offset:int = 0;
+			var firstBytePosition:int = -1;
+			
+			buffer.position = 0;
 			
 			for (; offset < buffer.length; offset++)
 			{
 				if (buffer[offset] == 0x00)
 				{
+					UtilKit.logger.info("Found 0x00 at "+offset);
+					
 					firstBytePosition = offset;
 				}
 				else if (buffer[offset] == 0xff && offset > 0)
-				{
-					if (buffer[firstBytePosition] != 0x00)
+				{						
+					if (firstBytePosition != -1 && buffer[firstBytePosition] != 0x00)
 					{
+						UtilKit.logger.fatal("First byte of possible message packet is not 0x00 - corrupt. First byte position: "+firstBytePosition);
+						
 						// "Data must start with \\x00"
 						states.push(new WebSocketState(WebSocketState.STATE_MESSAGE_ERROR, offset));
 						
@@ -667,10 +673,10 @@ package org.utilkit.net
 					var data:ByteArray = new ByteArray();
 					var length:int = (offset - firstBytePosition);
 					
+					UtilKit.logger.info("Reading message packet from "+firstBytePosition+" with a length of "+length);
+					
 					buffer.readBytes(data, 0, length);
-					
-					//UtilKit.logger.debug("Received data packet: "+ data);
-					
+
 					//"Received data packet successfully"
 					states.push(new WebSocketState(WebSocketState.STATE_MESSAGE_RECEIVED, offset, data));
 				}
