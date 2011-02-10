@@ -655,8 +655,13 @@ package org.utilkit.net
 					firstBytePosition = offset;
 				}
 				else if (buffer[offset] == 0xff && offset > 0)
-				{						
-					if (firstBytePosition != -1 && buffer[firstBytePosition] != 0x00)
+				{		
+					if (firstBytePosition == -1)
+					{
+						firstBytePosition = 0;
+					}
+					
+					if (buffer[firstBytePosition] != 0x00) // firstBytePosition != -1 && 
 					{
 						UtilKit.logger.fatal("First byte of possible message packet is not 0x00 - corrupt. First byte position: "+firstBytePosition);
 						
