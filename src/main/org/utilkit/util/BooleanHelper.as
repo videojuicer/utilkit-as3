@@ -10,11 +10,13 @@ package org.utilkit.util
 				case "yes":
 				case "yep":
 				case "1":
+				case 1:
 					return true;
 				case "false":
 				case "no":
 				case "nope":
 				case "0":
+				case 0:
 					return false;
 				default:
 					return new Boolean(value);
