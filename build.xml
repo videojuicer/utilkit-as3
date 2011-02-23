@@ -20,14 +20,24 @@
 	<property name="as3crypto.src.loc" location="${lib.loc}/as3crypto/src" />
 	
 	<property name="FLEX_HOME" location="${env.FLEX_HOME}" />
-	<property name="FLEX_HEADLESS" location="${env.headless}" />
+	<property name="FLEX_COVER_VIEWER" location="${env.FLEX_COVER_VIEWER}" />
+	<property name="FLEX_HEADLESS" value="${env.FLEX_HEADLESS}" />
+	<property name="FLASH_HEADLESS" value="${env.FLASH_HEADLESS}" />
 	
-	<condition property="headless" value="${FLEX_HEADLESS}" else="false">
+	<condition property="FLEX_HEADLESS" value="${FLEX_HEADLESS}" else="false">
 		<isset property="FLEX_HEADLESS" />
 	</condition>
 	
+	<condition property="FLASH_HEADLESS" value="${FLASH_HEADLESS}" else="false">
+		<isset property="FLASH_HEADLESS" />
+	</condition>
+	
+	<echo>FLEX_HOME: ${FLEX_HOME}</echo>
+	<echo>FLEX_HEADLESS: ${FLEX_HEADLESS}</echo>
+	<echo>FLASH_HEADLESS: ${FLASH_HEADLESS}</echo>
+	
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
-	<taskdef resource="flexUnitTasks.tasks" classpath="${lib.loc}/flexUnitTasks-4.1.0.53-sdk4.0.0.14159.jar" />
+	<taskdef resource="flexUnitTasks.tasks" classpath="${lib.loc}/flexUnitTasks-4.1.0_RC2-4.jar" />
 	
 	<target name="usage" description="Displays main targets of the build recipe">
 		<java classname="org.apache.tools.ant.Main">
@@ -55,10 +65,13 @@
 		<mkdir dir="${dist.loc}" />
 	</target>
 	
-	<target name="compile" depends="init" description="Compiles the main UtilKit-as3 SWC">
+	<target name="compile" depends="init,fetch-crypto" description="Compiles the main UtilKit-as3 SWC">
 		<compc output="${bin.loc}/utilkit-as3.swc" fork="false">
 			<source-path path-element="${main.src.loc}" />
+			<source-path path-element="${as3crypto.src.loc}" />
+			
 			<include-sources dir="${main.src.loc}" includes="*" />
+			
 			<compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
 			<compiler.headless-server>true</compiler.headless-server>
 		</compc>
@@ -69,8 +82,8 @@
 			<source-path path-element="${main.src.loc}" />
 			<source-path path-element="${test.src.loc}" />
 			<library-path dir="${lib.loc}" append="true">
-				<include name="flexunit-core-flex-4.0.0.53-sdk4.0.0.14159.swc" />
-				<include name="flexunit-cilistener-4.1.0.53-sdk4.0.0.14159.swc" />
+				<include name="flexunit-4.1.0_RC2-4-as3_4.1.0.16076.swc" />
+				<include name="flexunit-cilistener-4.1.0_RC2-4-4.1.0.16076.swc" />
 				<!--<include name="flexunit-flexcoverlistener-4.1.0.53-sdk4.0.0.14159.swc" />-->
 			</library-path>
 			<compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
@@ -124,7 +137,9 @@
 	
 	<target name="test-only" depends="test-compile">
 		<flexunit swf="${bin.loc}/utilkit-as3-specs.swf" toDir="${report.unit.loc}"
-				haltonfailure="false" verbose="true" localTrusted="true" headless="${headless}" />
+				haltonfailure="false" verbose="true" localTrusted="true" headless="${FLASH_HEADLESS}"
+				timeout="40000" />
+		<sleep seconds="10"/>
 	</target>
 	
 	<target name="report" description="Generates HTML reports for the last ran test specs">
