@@ -27,6 +27,26 @@ package org.utilkit.util
 			return clone;
 		}
 		
+		public static function stripNullValues(source:Object):Object
+		{
+			var obj:Object = null;
+			
+			if (source != null)
+			{
+				obj = new Object();
+				
+				for (var key:String in source)
+				{
+					if (source[key] != null)
+					{
+						obj[key] = source[key];
+					}
+				}
+			}
+			
+			return obj;
+		}
+		
 		public static function merge(source:Object, withSource:Object):Object
 		{
 			var mergedObject:Object = new Object();
