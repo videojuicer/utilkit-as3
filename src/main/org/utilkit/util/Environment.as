@@ -1,12 +1,24 @@
 package org.utilkit.util
 {
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.display.StageDisplayState;
 	import flash.external.ExternalInterface;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	import flash.system.System;
+	
+	import org.utilkit.UtilKit;
 
 	public class Environment
 	{
+		protected static var __stageRoot:Stage;
+		
+		public static function attachToStageRoot(stage:Stage):void
+		{
+			Environment.__stageRoot = stage;
+		}
+		
 		public static function get embeddedURL():String
 		{
 			var location:String = Environment.callExternalMethod("document.location.toString") as String;
@@ -73,6 +85,13 @@ package org.utilkit.util
 		
 		public static function openWindow(request:URLRequest, target:String = "_blank"):void
 		{
+			if (Environment.inFullscreenMode)
+			{
+				UtilKit.logger.warn("Opening URL in browser, but currently running in fullscreen mode. Dropping down to window mode now ...");
+				
+				Environment.toggleScreenMode(true);
+			}
+			
 			navigateToURL(request, target);
 		}
 		
@@ -84,6 +103,35 @@ package org.utilkit.util
 		public static function openWindowUrl(url:String, target:String = "_blank"):void
 		{	
 			Environment.openWindow(new URLRequest(url), target);
+		}
+		
+		public static function get inFullscreenMode():Boolean
+		{
+			return (Environment.__stageRoot != null && Environment.__stageRoot.displayState == StageDisplayState.FULL_SCREEN);
+		}
+		
+		public static function get inWindowMode():Boolean
+		{
+			return (Environment.__stageRoot != null && Environment.__stageRoot.displayState == StageDisplayState.NORMAL);
+		}
+		
+		public static function toggleScreenMode(exceptFullscreen:Boolean = false):void
+		{
+			if (Environment.__stageRoot != null)
+			{
+				var stage:Stage = Environment.__stageRoot;
+				
+				stage.fullScreenSourceRect = null;
+				
+				if(stage.displayState == StageDisplayState.FULL_SCREEN)
+				{
+					stage.displayState = StageDisplayState.NORMAL;
+				}
+				else if (!exceptFullscreen)
+				{
+					stage.displayState = StageDisplayState.FULL_SCREEN;
+				}
+			}
 		}
 	}
 }

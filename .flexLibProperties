@@ -36,7 +36,6 @@
     <classEntry path="SpecRunner"/>
     <classEntry path="org.utilkit.spec.UtilKitSuite"/>
     <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
-    <classEntry path="org.utilkit.spec.utils.ObjectUtilTestCase"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
