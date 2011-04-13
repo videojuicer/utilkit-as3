@@ -2,24 +2,24 @@ package org.utilkit.collection
 {
 	public class List
 	{
-		protected var _source:Array;
+		protected var _source:Vector.<Object>;
 		
 		public function List(source:Array = null)
 		{
-			this._source = source;
+			this._source = new Vector.<Object>(source);
 			
 			if (this._source == null)
 			{
-				this._source = new Array();
+				this._source = new Vector.<Object>();
 			}
 		}
 		
-		public function get source():Array
+		public function get source():Vector.<Object>
 		{
 			return this._source;
 		}
 		
-		public function set source(source:Array):void
+		public function set source(source:Vector.<Object>):void
 		{
 			this._source = source;
 		}

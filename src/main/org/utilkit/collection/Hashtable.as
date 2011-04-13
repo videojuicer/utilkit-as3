@@ -44,7 +44,7 @@ package org.utilkit.collection
 		{
 			if (this.hasItem(key))
 			{
-				for (var i:int = this._keys.length; i >= 0; i--)
+				for (var i:int = this._keys.length - 1; i >= 0; i--)
 				{
 					if (key == this._keys.getItemAt(i))
 					{
@@ -62,10 +62,8 @@ package org.utilkit.collection
 			
 			if (i == -1)
 			{
-				var n:int = this.length;
-				
-				this._keys.setItemAt(key, n);
-				this.setItemAt(value, n);
+				this._keys.addItem(key);
+				this.addItem(value);
 			}
 			else
 			{
@@ -86,13 +84,16 @@ package org.utilkit.collection
 		
 		public function hasItem(key:*):Boolean
 		{
-			for (var i:int = this._keys.length; i >= 0; i--)
+			if (this._keys.length > 0)
 			{
-				var newKey:* = this._keys.getItemAt(i);
-				
-				if (key == newKey)
+				for (var i:int = this._keys.length -1; i >= 0; i--)
 				{
-					return true;
+					var newKey:* = this._keys.getItemAt(i);
+					
+					if (key == newKey)
+					{
+						return true;
+					}
 				}
 			}
 			
