@@ -13,7 +13,7 @@ package org.utilkit
 		
 		public static function get version():String
 		{
-			return "0.0.2";
+			return "0.3.2";
 		}
 	}
 }

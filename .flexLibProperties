@@ -36,6 +36,10 @@
     <classEntry path="SpecRunner"/>
     <classEntry path="org.utilkit.spec.UtilKitSuite"/>
     <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
+    <classEntry path="org.utilkit.parser.expressions.ExpressionParser"/>
+    <classEntry path="org.utilkit.constants.AlgebraicOperator"/>
+    <classEntry path="org.utilkit.spec.tests.parser.expressions.ExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.parser.expressions.ExpressionContext"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
