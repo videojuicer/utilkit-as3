@@ -4,39 +4,38 @@ package org.utilkit.parser.expressions
 
 	public class ExpressionParser extends ExpressionContext
 	{
-		protected var _contextOpen:String = null;
-		protected var _contextClosed:String = null;
-		
-		protected var _operators:Vector.<String>;
+		protected var _configuration:ExpressionParserConfiguration;
 
-		public function ExpressionParser(operators:Array, contextOpen:String = '(', contextClosed:String = ')')
+		public function ExpressionParser(configuration:ExpressionParserConfiguration = null)
 		{
-			this._operators = new Vector.<String>();
-			
-			for (var i:int = 0; i < operators.length; i++)
+			if (configuration == null)
 			{
-				this._operators.push(operators[i]);
+				configuration = new ExpressionParserConfiguration();
 			}
 			
-			this._contextOpen = contextOpen;
-			this._contextClosed = contextClosed;
+			this._configuration = configuration;
 			
 			super(null, 0);
 		}
 		
-		public function get contextOpen():String
+		public function get configuration():ExpressionParserConfiguration
 		{
-			return this._contextOpen;
+			return this._configuration;
 		}
 		
-		public function get contextClosed():String
+		public function get contextOpen():String
 		{
-			return this._contextClosed;
+			return this.configuration.contextOpen;
+		}
+		
+		public function get contextClose():String
+		{
+			return this.configuration.contextClose;
 		}
 		
 		public function get operators():Vector.<String>
 		{
-			return this._operators;
+			return this.configuration.operators;
 		}
 		
 		public override function get expressionParser():ExpressionParser

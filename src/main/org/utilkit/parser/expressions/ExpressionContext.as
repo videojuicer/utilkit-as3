@@ -110,7 +110,7 @@ package org.utilkit.parser.expressions
 				}
 				
 				// found the end of ourself
-				if (this.matches(remainder, this.expressionParser.contextClosed))
+				if (this.matches(remainder, this.expressionParser.contextClose))
 				{
 					if (token != null && token != "")
 					{

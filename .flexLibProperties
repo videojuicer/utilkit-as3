@@ -40,6 +40,11 @@
     <classEntry path="org.utilkit.constants.AlgebraicOperator"/>
     <classEntry path="org.utilkit.spec.tests.parser.expressions.ExpressionParserTestCase"/>
     <classEntry path="org.utilkit.parser.expressions.ExpressionContext"/>
+    <classEntry path="org.utilkit.parser.expressions.MathematicalExpressionParser"/>
+    <classEntry path="org.utilkit.parser.expressions.ExpressionParserConfiguration"/>
+    <classEntry path="org.utilkit.spec.tests.parser.expressions.MathematicalExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.parser.expressions.BooleanExpressionParser"/>
+    <classEntry path="org.utilkit.spec.tests.parser.expressions.BooleanExpressionParserTestCase"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

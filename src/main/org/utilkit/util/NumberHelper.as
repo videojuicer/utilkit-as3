@@ -13,5 +13,10 @@ package org.utilkit.util
 			
 			return ret;
 		}
+		
+		public static function isNumeric(value:Object):Boolean
+		{
+			return !isNaN(parseInt(value.toString()));
+		}
 	}
 }

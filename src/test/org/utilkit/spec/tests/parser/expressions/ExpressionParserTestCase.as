@@ -4,6 +4,7 @@ package org.utilkit.spec.tests.parser.expressions
 	
 	import org.utilkit.constants.AlgebraicOperator;
 	import org.utilkit.parser.expressions.ExpressionParser;
+	import org.utilkit.parser.expressions.ExpressionParserConfiguration;
 	import org.utilkit.parser.expressions.InvalidExpressionException;
 
 	public class ExpressionParserTestCase
@@ -20,7 +21,8 @@ package org.utilkit.spec.tests.parser.expressions
 				AlgebraicOperator.ARITHMETIC_DIVIDE 
 			];
 			
-			this._parser = new ExpressionParser(operators);
+			this._parser = new ExpressionParser();
+			this._parser.configuration.operatorsSource = operators;
 		}
 		
 		[After]
