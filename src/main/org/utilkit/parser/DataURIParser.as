@@ -94,7 +94,7 @@ package org.utilkit.parser
 			if(matches[2] == ";base64" || matches[5] == ";base64") this._base64 = true;
 			
 			// Stash data
-			this._rawData = uriData;
+			this._rawData = unescape(uriData);
 			
 			// Decode and store data
 			this._data = (this.base64)? Base64.decode(this.rawData) : this.rawData;
