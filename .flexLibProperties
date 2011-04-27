@@ -36,15 +36,20 @@
     <classEntry path="SpecRunner"/>
     <classEntry path="org.utilkit.spec.UtilKitSuite"/>
     <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
-    <classEntry path="org.utilkit.parser.expressions.ExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.parsers.ExpressionParser"/>
     <classEntry path="org.utilkit.constants.AlgebraicOperator"/>
-    <classEntry path="org.utilkit.spec.tests.parser.expressions.ExpressionParserTestCase"/>
-    <classEntry path="org.utilkit.parser.expressions.ExpressionContext"/>
-    <classEntry path="org.utilkit.parser.expressions.MathematicalExpressionParser"/>
-    <classEntry path="org.utilkit.parser.expressions.ExpressionParserConfiguration"/>
-    <classEntry path="org.utilkit.spec.tests.parser.expressions.MathematicalExpressionParserTestCase"/>
-    <classEntry path="org.utilkit.parser.expressions.BooleanExpressionParser"/>
-    <classEntry path="org.utilkit.spec.tests.parser.expressions.BooleanExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.ExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.expressions.ExpressionContext"/>
+    <classEntry path="org.utilkit.expressions.parsers.MathematicalExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.ExpressionParserConfiguration"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.MathematicalExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.expressions.parsers.BooleanExpressionParser"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.BooleanExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.expressions.parsers.AlgebraicExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.parsers.FunctionExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.ExpressionEngine"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.AlgebraicExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.FunctionExpressionParserTestCase"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

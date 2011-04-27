@@ -1,7 +1,8 @@
-package org.utilkit.parser.expressions
+package org.utilkit.expressions.parsers
 {
 	import org.utilkit.constants.AlgebraicOperator;
 	import org.utilkit.util.NumberHelper;
+	import org.utilkit.expressions.ExpressionParserConfiguration;
 
 	public class MathematicalExpressionParser
 	{
@@ -40,6 +41,7 @@ package org.utilkit.parser.expressions
 		public function parse(context:Vector.<Object>):Number
 		{
 			var result:Number = 0;
+			var previous:Object = null;
 			var operator:String = null;
 			
 			for (var i:int = 0; i < context.length; i++)
@@ -50,34 +52,46 @@ package org.utilkit.parser.expressions
 				{
 					var child:Number = this.parse((token as Vector.<Object>));
 					
-					result = this.calculateSum(result, operator, child);
-					
-					continue;
+					// set the token to our context result, so we use it with the previous
+					token = child;
 				}
-				
-				var operatorFound:Boolean = false;
-				
-				for (var k:int = 0; k < this._expressionParser.operators.length; k++)
+				else
 				{
-					var op:String = this._expressionParser.operators[k];
+					var operatorFound:Boolean = false;
 					
-					if (token == op)
+					for (var k:int = 0; k < this._expressionParser.operators.length; k++)
 					{
-						operatorFound = true;
-						operator = op;
+						var op:String = this._expressionParser.operators[k];
+						
+						if (token == op)
+						{
+							operatorFound = true;
+							operator = op;
+							
+							continue;
+						}
+					}
+					
+					if (operatorFound)
+					{
+						operatorFound = false;
 						
 						continue;
 					}
 				}
 				
-				if (operatorFound)
+				if (previous != null)
 				{
-					operatorFound = false;
+					result = this.calculateSum(previous, operator, token);
 					
-					continue;
+					// now we have calculated the sum, our previous is the result
+					// so the next loop around will use the result
+					previous = result;
 				}
-				
-				result = this.calculateSum((result.toString() as Object), operator, token);;
+				else
+				{
+					previous = token;
+				}
 			}
 			
 			return result;
@@ -85,15 +99,15 @@ package org.utilkit.parser.expressions
 		
 		public function calculateSum(previous:Object, operator:String, current:Object):Number
 		{
-			var result:Number = 0;
+			var result:Number = NaN;
 			
 			if (operator == null)
 			{
 				operator = AlgebraicOperator.ARITHMETIC_ADD;
 			}
 			
-			var a:Number = parseInt(previous.toString());
-			var b:Number = parseInt(current.toString());
+			var a:Number = new Number(previous.toString());
+			var b:Number = new Number(current.toString());
 			
 			if (isNaN(a) || isNaN(b))
 			{

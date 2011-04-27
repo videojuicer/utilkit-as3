@@ -1,11 +1,11 @@
-package org.utilkit.spec.tests.parser.expressions
+package org.utilkit.spec.tests.expressions
 {
 	import flexunit.framework.Assert;
 	
 	import org.utilkit.constants.AlgebraicOperator;
-	import org.utilkit.parser.expressions.ExpressionParser;
-	import org.utilkit.parser.expressions.ExpressionParserConfiguration;
-	import org.utilkit.parser.expressions.InvalidExpressionException;
+	import org.utilkit.expressions.parsers.ExpressionParser;
+	import org.utilkit.expressions.ExpressionParserConfiguration;
+	import org.utilkit.expressions.InvalidExpressionException;
 
 	public class ExpressionParserTestCase
 	{

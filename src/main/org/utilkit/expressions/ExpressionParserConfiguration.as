@@ -1,5 +1,7 @@
-package org.utilkit.parser.expressions
+package org.utilkit.expressions
 {
+	import org.utilkit.collection.Hashtable;
+
 	public class ExpressionParserConfiguration
 	{
 		protected var _operators:Vector.<String>;
@@ -7,12 +9,18 @@ package org.utilkit.parser.expressions
 		protected var _contextOpen:String = null;
 		protected var _contextClose:String = null;
 		
+		protected var _variables:Hashtable;
+		protected var _functions:Hashtable;
+		
 		public function ExpressionParserConfiguration(operatorsSource:Array = null, contextOpen:String = '(', contextClose:String = ')')
 		{
 			this.operatorsSource = operatorsSource;
 			
 			this.contextOpen = contextOpen;
 			this.contextClose = contextClose;
+			
+			this._variables = new Hashtable();
+			this._functions = new Hashtable();
 		}
 		
 		public function get operators():Vector.<String>
@@ -58,6 +66,26 @@ package org.utilkit.parser.expressions
 		public function set contextClose(value:String):void
 		{
 			this._contextClose = value;
+		}
+		
+		public function get variables():Hashtable
+		{
+			return this._variables;
+		}
+		
+		public function set variables(value:Hashtable):void
+		{
+			this._variables = value;
+		}
+		
+		public function get functions():Hashtable
+		{
+			return this._functions;
+		}
+		
+		public function set functions(value:Hashtable):void
+		{
+			this._functions = value;
 		}
 	}
 }

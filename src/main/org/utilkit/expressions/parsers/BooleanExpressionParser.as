@@ -1,4 +1,4 @@
-package org.utilkit.parser.expressions
+package org.utilkit.expressions.parsers
 {
 	import org.utilkit.constants.AlgebraicOperator;
 
@@ -16,7 +16,7 @@ package org.utilkit.parser.expressions
 		{
 			var result:Number = super.calculateSum(previous, operator, current);
 			
-			if (result == 0)
+			if (isNaN(result))
 			{
 				switch (operator)
 				{

@@ -1,4 +1,4 @@
-package org.utilkit.parser.expressions
+package org.utilkit.expressions
 {
 	import flash.errors.IllegalOperationError;
 	

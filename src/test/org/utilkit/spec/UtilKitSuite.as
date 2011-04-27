@@ -1,9 +1,9 @@
 package org.utilkit.spec
 {
 	import org.utilkit.spec.tests.net.WebSocketTestCase;
-	import org.utilkit.spec.tests.parser.expressions.BooleanExpressionParserTestCase;
-	import org.utilkit.spec.tests.parser.expressions.ExpressionParserTestCase;
-	import org.utilkit.spec.tests.parser.expressions.MathematicalExpressionParserTestCase;
+	import org.utilkit.spec.tests.expressions.BooleanExpressionParserTestCase;
+	import org.utilkit.spec.tests.expressions.ExpressionParserTestCase;
+	import org.utilkit.spec.tests.expressions.MathematicalExpressionParserTestCase;
 	import org.utilkit.spec.tests.util.TimeHelperTestCase;
 
 	[Suite]

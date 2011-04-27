@@ -1,9 +1,9 @@
-package org.utilkit.spec.tests.parser.expressions
+package org.utilkit.spec.tests.expressions
 {
 	import flexunit.framework.Assert;
 	
-	import org.utilkit.parser.expressions.BooleanExpressionParser;
-	import org.utilkit.parser.expressions.InvalidExpressionException;
+	import org.utilkit.expressions.parsers.BooleanExpressionParser;
+	import org.utilkit.expressions.InvalidExpressionException;
 	
 	public class BooleanExpressionParserTestCase
 	{
