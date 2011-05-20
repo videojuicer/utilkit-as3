@@ -1,7 +1,7 @@
 package org.utilkit.expressions
 {
-	import org.utilkit.util.StringUtil;
 	import org.utilkit.expressions.parsers.ExpressionParser;
+	import org.utilkit.util.StringUtil;
 
 	public class ExpressionContext
 	{
@@ -77,19 +77,57 @@ package org.utilkit.expressions
 			return this.parentContext.expressionParser;
 		}
 		
-		public function parse():void
+		public function toVector():Vector.<Object>
+		{
+			var result:Vector.<Object> = new Vector.<Object>();
+			
+			for (var i:int = 0; i < this.tokens.length; i++)
+			{
+				var token:Object = this.tokens[i];
+				
+				if (token is ExpressionFunction)
+				{
+					var expressionFunction:ExpressionFunction = (token as ExpressionFunction);
+					var functionToken:Object = {
+						name: expressionFunction.functionName,
+						arguments: expressionFunction.arguments
+					};
+					
+					result.push(functionToken);
+				}
+				else if (token is ExpressionContext)
+				{
+					result.push((token as ExpressionContext).toVector());
+				}
+				else
+				{
+					result.push(token);
+				}
+			}
+			
+			return result;
+		}
+		
+		public function parse(contextOperators:Vector.<String> = null):void
 		{
 			// set the source to parse and remove all the white space
 			var tokenString:String = this.tokenString; //.replace(/\ /g, '');
 			
 			var token:String = "";
 			
+			var operators:Vector.<String> = this.expressionParser.operators;
+
+			if (contextOperators != null)
+			{
+				operators = operators.concat(contextOperators);
+			}
+			
 			for (var i:uint = 0; i < tokenString.length; i++)
 			{
 				var character:String = tokenString.charAt(i);
 				var remainder:String = tokenString.substr(i);
 				
-				if (character == " ")
+				if (character == ' ')
 				{
 					// skip white space
 					continue;
@@ -98,10 +136,24 @@ package org.utilkit.expressions
 				// parse new contexts
 				if (this.matches(remainder, this.expressionParser.contextOpen))
 				{
-					var context:ExpressionContext = new ExpressionContext(this, (i + (this.expressionParser.contextOpen.length)));
+					var context:ExpressionContext = null;
+					var contextStart:int = (i + (this.expressionParser.contextOpen.length));
+					
+					if (token != "" && tokenString.charAt(i - 1) != ' ')
+					{
+						// we hit a new context, whilst we were building a token
+						// so its a function!
+						context = new ExpressionFunction(this, contextStart, token);
+						token = "";
+					}
+					else
+					{
+						context = new ExpressionContext(this, contextStart);
+					}
+					
 					context.parse();
 					
-					this._tokens.push(context.tokens);
+					this.tokens.push(context);
 					
 					// skip to the end of the context, the parentEndPosition,
 					// indicates the closing context operator, so we skip over that too
@@ -129,9 +181,9 @@ package org.utilkit.expressions
 				var operatorFound:Boolean = false;
 				
 				// find an operator
-				for (var k:int = 0; k < this.expressionParser.operators.length; k++)
+				for (var k:int = 0; k < operators.length; k++)
 				{
-					var operator:String = this.expressionParser.operators[k];
+					var operator:String = operators[k];
 					
 					// do we match?
 					if (this.matches(remainder, operator))

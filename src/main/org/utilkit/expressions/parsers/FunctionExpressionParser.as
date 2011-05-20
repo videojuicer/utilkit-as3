@@ -1,5 +1,7 @@
 package org.utilkit.expressions.parsers
 {
+	import org.utilkit.util.VectorUtil;
+
 	public class FunctionExpressionParser extends AlgebraicExpressionParser
 	{
 		public function FunctionExpressionParser()
@@ -7,24 +9,23 @@ package org.utilkit.expressions.parsers
 			super();
 		}
 		
-		public override function calculateSum(previous:Object, operator:String, current:Object):Number
+		public override function calculateValue(value:Object):Object
 		{
-			// switch, previous + current for the function result
-			if (this.configuration.functions.hasItem(previous))
+			if (value is Object && value.hasOwnProperty("name"))
 			{
-				var previousFunc:Function = this.configuration.functions.getItem(previous);
+				var functionName:String = value.name;
+				var functionArguments:Vector.<Object> = value.arguments;
 				
-				previous = previousFunc.call();
+				// switch, previous + current for the function result
+				if (this.configuration.functions.hasItem(functionName))
+				{
+					var func:Function = this.configuration.functions.getItem(functionName);
+					
+					return func.apply(null, VectorUtil.vectorToArray(functionArguments));
+				}
 			}
 			
-			if (this.configuration.functions.hasItem(current))
-			{
-				var currentFunc:Function = this.configuration.functions.getItem(current);
-				
-				current = currentFunc.call();
-			}
-			
-			return super.calculateSum(previous, operator, current);
+			return super.calculateValue(value);
 		}
 	}
 }

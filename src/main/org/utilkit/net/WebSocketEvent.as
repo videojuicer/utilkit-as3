@@ -30,5 +30,10 @@ package org.utilkit.net
 		{
 			return this._data;
 		}
+		
+		public override function clone():Event
+		{
+			return (this as Event);
+		}
 	}
 }

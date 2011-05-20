@@ -45,14 +45,20 @@ package org.utilkit.expressions.parsers
 			return this;
 		}
 		
-		public function begin(tokenString:String):Vector.<Object>
+		public function begin(tokenString:String):ExpressionContext
 		{
+			if (tokenString == null)
+			{
+				return null;
+			}
+			
 			this._tokenString = tokenString;
 			
 			var context:ExpressionContext = new ExpressionContext(this, 0);
+			
 			context.parse();
 			
-			return context.tokens;
+			return context;
 		}
 	}
 }

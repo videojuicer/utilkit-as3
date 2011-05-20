@@ -4,6 +4,8 @@ package org.utilkit.util
 	{
 		public static function stringToBoolean(value:String):Boolean
 		{
+			var result:Boolean = false;
+			
 			switch (value)
 			{
 				case "true":
@@ -11,16 +13,21 @@ package org.utilkit.util
 				case "yep":
 				case "1":
 				case 1:
-					return true;
+					result = true;
+					break;
 				case "false":
 				case "no":
 				case "nope":
 				case "0":
 				case 0:
-					return false;
+					result = false;
+					break;
 				default:
-					return new Boolean(value);
+					result = new Boolean(value);
+					break;
 			}
+			
+			return result;
 		}
 	}
 }

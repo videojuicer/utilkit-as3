@@ -7,20 +7,14 @@ package org.utilkit.expressions.parsers
 			super();
 		}
 		
-		public override function calculateSum(previous:Object, operator:String, current:Object):Number
+		public override function calculateValue(value:Object):Object
 		{
-			// switch, previous + current for the variable result
-			if (this.configuration.variables.hasItem(previous))
+			if (this.configuration.variables.hasItem(value))
 			{
-				previous = this.configuration.variables.getItem(previous);
+				return this.configuration.variables.getItem(value);
 			}
 			
-			if (this.configuration.variables.hasItem(current))
-			{
-				current = this.configuration.variables.getItem(current);
-			}
-			
-			return super.calculateSum(previous, operator, current);
+			return super.calculateValue(value);
 		}
 	}
 }

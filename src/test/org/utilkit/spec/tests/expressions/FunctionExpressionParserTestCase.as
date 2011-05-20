@@ -15,6 +15,7 @@ package org.utilkit.spec.tests.expressions
 			
 			this._parser.configuration.functions.setItem("helloWorld", this.helloWorld);
 			this._parser.configuration.functions.setItem("playedCount", this.playedCount);
+			this._parser.configuration.functions.setItem("sum", this.sum);
 		}
 		
 		[After]
@@ -33,6 +34,11 @@ package org.utilkit.spec.tests.expressions
 			return 2;
 		}
 		
+		public function sum(a:Number, b:Number):Number
+		{
+			return (a + b);
+		}
+		
 		[Test(description="Tests a basic sum using one function")]
 		public function calculatesBasicSumWithFunction():void
 		{
@@ -42,6 +48,20 @@ package org.utilkit.spec.tests.expressions
 			Assert.assertEquals(105, results);
 			
 			expression = "helloWorld() - 5";
+			results = this._parser.begin(expression);
+			
+			Assert.assertEquals(95, results);
+		}
+		
+		[Test(description="Tests a basic sum using one function with arguments")]
+		public function calculatesBasicSumWithFunctionWithArguments():void
+		{
+			var expression:String = "sum(50, 50) + 5";
+			var results:Number = this._parser.begin(expression);
+			
+			Assert.assertEquals(105, results);
+			
+			expression = "sum(50, 50) - 5";
 			results = this._parser.begin(expression);
 			
 			Assert.assertEquals(95, results);

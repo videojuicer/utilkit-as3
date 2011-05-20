@@ -1,12 +1,15 @@
 package org.utilkit.expressions.parsers
 {
 	import org.utilkit.constants.AlgebraicOperator;
-	import org.utilkit.util.NumberHelper;
 	import org.utilkit.expressions.ExpressionParserConfiguration;
+	import org.utilkit.util.NumberHelper;
 
 	public class MathematicalExpressionParser
 	{
 		protected var _expressionParser:ExpressionParser;
+		
+		protected var _tokens:Vector.<Object>;
+		protected var _tokenString:String = null;
 		
 		public function MathematicalExpressionParser()
 		{
@@ -32,17 +35,30 @@ package org.utilkit.expressions.parsers
 		
 		public function begin(tokenString:String):Number
 		{
-			var tokens:Vector.<Object> = this._expressionParser.begin(tokenString);
-			var result:Number = this.parse(tokens);
+			return this.evaluate(tokenString);
+		}
+		
+		public function evaluate(tokenString:String):Number
+		{
+			if (tokenString == null)
+			{
+				return NaN;
+			}
 			
-			return result;
+			if (this._tokenString != tokenString || this._tokens == null || this._tokens.length == 0)
+			{
+				this._tokens = this._expressionParser.begin(tokenString).toVector();
+			}
+			
+			return this.parse(this._tokens);
 		}
 		
 		public function parse(context:Vector.<Object>):Number
 		{
-			var result:Number = 0;
+			var result:Number = NaN;
 			var previous:Object = null;
 			var operator:String = null;
+			var usedOperator:Boolean = true;
 			
 			for (var i:int = 0; i < context.length; i++)
 			{
@@ -66,9 +82,11 @@ package org.utilkit.expressions.parsers
 						if (token == op)
 						{
 							operatorFound = true;
+							usedOperator = false;
+							
 							operator = op;
 							
-							continue;
+							break;
 						}
 					}
 					
@@ -76,13 +94,17 @@ package org.utilkit.expressions.parsers
 					{
 						operatorFound = false;
 						
+						
 						continue;
 					}
 				}
 				
 				if (previous != null)
 				{
+					token = this.calculateValue(token);
 					result = this.calculateSum(previous, operator, token);
+					
+					usedOperator = true;
 					
 					// now we have calculated the sum, our previous is the result
 					// so the next loop around will use the result
@@ -90,11 +112,38 @@ package org.utilkit.expressions.parsers
 				}
 				else
 				{
-					previous = token;
+					if (!usedOperator)
+					{
+						token = operator + token;
+						
+						usedOperator = true;
+					}
+					
+					previous = this.calculateValue(token);
 				}
 			}
 			
+			if (previous != null && context.length == 1)
+			{
+				var previousResult:Number = new Number(previous);
+				
+				if (!isNaN(previousResult))
+				{
+					result = previousResult;
+				}
+			}
+			
+			if (isNaN(result) && previous != null)
+			{
+				result = this.calculateSum(previous, operator, null);
+			}
+			
 			return result;
+		}
+		
+		public function calculateValue(value:Object):Object
+		{
+			return value;
 		}
 		
 		public function calculateSum(previous:Object, operator:String, current:Object):Number
@@ -104,6 +153,11 @@ package org.utilkit.expressions.parsers
 			if (operator == null)
 			{
 				operator = AlgebraicOperator.ARITHMETIC_ADD;
+			}
+			
+			if (current == null)
+			{
+				current = 0;
 			}
 			
 			var a:Number = new Number(previous.toString());
