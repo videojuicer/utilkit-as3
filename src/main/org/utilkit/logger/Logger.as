@@ -44,14 +44,14 @@ package org.utilkit.logger
 		
 		protected static var _lastBenchmark:Date = null;
 		
-		public static function get retainLogs():Boolean
+		public static function get canRetainLogs():Boolean
 		{
 			return Logger._retainLogs;
 		}
 		
-		public static function set retainLogs(retain:Boolean):void
+		public static function set canRetainLogs(retain:Boolean):void
 		{
-			Logger.retainLogs = retain;
+			Logger.canRetainLogs = retain;
 		}
 		
 		public static function get logMessages():Vector.<LogMessage>
@@ -193,10 +193,13 @@ package org.utilkit.logger
 		{
 			var totalMemory:uint = System.totalMemory;
 			
-			var memoryMB:Number = Math.round(totalMemory / 1024 / 1024 * 100) / 100;
-			var memorykB:Number = Math.round(totalMemory / 1024);
+			var memoryMB:Number = (totalMemory / 1024 / 1024 * 100) / 100;
+			var memoryKB:Number = (totalMemory / 1024);
 			
-			return "Memory Snapshot: "+memoryMB+" MB ("+memorykB+" kB)";
+			memoryMB = (memoryMB > 0.0) ? int(memoryMB + 0.5) : int(memoryMB - 0.5);
+			memoryKB = (memoryKB > 0.0) ? int(memoryKB + 0.5) : int(memoryKB - 0.5);
+			
+			return "Memory Snapshot: "+memoryMB+" MB ("+memoryKB+" kB)";
 		}
 		
 		public static function benchmark(applicationSignature:String, message:String, targetObject:Object = null):void
@@ -231,7 +234,7 @@ package org.utilkit.logger
 				var logMessage:LogMessage = new LogMessage(message, targetObject, level, applicationSignature);
 				
 				// Stash in the history
-				if(Logger.retainLogs)
+				if(Logger.canRetainLogs)
 				{
 					if(Logger._logMessages == null)
 					{

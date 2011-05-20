@@ -25,7 +25,13 @@ package mx.core
 			var context:LoaderContext = new LoaderContext();
 			context.applicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);
 			
+			if (context.hasOwnProperty("allowCodeImport"))
+			{
+				context["allowCodeImport"] = false;
+			}
+			
 			this._loader = new Loader();
+			
 			this._loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.onLoaderComplete);
 			
 			this._loader.loadBytes(this.movieClipData, context);

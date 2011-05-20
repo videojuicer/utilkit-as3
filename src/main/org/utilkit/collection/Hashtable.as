@@ -1,7 +1,5 @@
 package org.utilkit.collection
 {
-	import org.utilkit.collection.List;
-
 	public class Hashtable extends List
 	{
 		protected var _keys:List = new List();

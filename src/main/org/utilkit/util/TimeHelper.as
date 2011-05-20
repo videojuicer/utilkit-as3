@@ -31,17 +31,17 @@ package org.utilkit.util
 		
 		public static function millisecondsToHours(milliseconds:Number):int
 		{
-			return Math.floor(millisecondsToMinutes(milliseconds) / 60);
+			return int(millisecondsToMinutes(milliseconds) / 60);
 		}
 		
 		public static function millisecondsToMinutes(milliseconds:Number):int
 		{
-			return Math.floor(millisecondsToSeconds(milliseconds) / 60);
+			return int(millisecondsToSeconds(milliseconds) / 60);
 		}
 		
 		public static function millisecondsToSeconds(milliseconds:Number):int
 		{
-			return Math.floor(milliseconds / 1000);
+			return int(milliseconds / 1000);
 		}
 	}
 }

@@ -8,8 +8,18 @@
     <classEntry path="org.utilkit.Version"/>
     <classEntry path="org.utilkit.collection.Hashtable"/>
     <classEntry path="org.utilkit.collection.List"/>
+    <classEntry path="org.utilkit.constants.AlgebraicOperator"/>
     <classEntry path="org.utilkit.crypto.Base64"/>
     <classEntry path="org.utilkit.crypto.MD5"/>
+    <classEntry path="org.utilkit.expressions.ExpressionContext"/>
+    <classEntry path="org.utilkit.expressions.ExpressionEngine"/>
+    <classEntry path="org.utilkit.expressions.ExpressionFunction"/>
+    <classEntry path="org.utilkit.expressions.ExpressionParserConfiguration"/>
+    <classEntry path="org.utilkit.expressions.parsers.AlgebraicExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.parsers.BooleanExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.parsers.ExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.parsers.FunctionExpressionParser"/>
+    <classEntry path="org.utilkit.expressions.parsers.MathematicalExpressionParser"/>
     <classEntry path="org.utilkit.logger.ApplicationLog"/>
     <classEntry path="org.utilkit.logger.LogLevel"/>
     <classEntry path="org.utilkit.logger.LogMessage"/>
@@ -33,23 +43,16 @@
     <classEntry path="org.utilkit.util.StringUtil"/>
     <classEntry path="org.utilkit.util.TimeHelper"/>
     <classEntry path="org.utilkit.util.UrlUtil"/>
+    <classEntry path="org.utilkit.util.VectorUtil"/>
     <classEntry path="SpecRunner"/>
     <classEntry path="org.utilkit.spec.UtilKitSuite"/>
-    <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
-    <classEntry path="org.utilkit.expressions.parsers.ExpressionParser"/>
-    <classEntry path="org.utilkit.constants.AlgebraicOperator"/>
-    <classEntry path="org.utilkit.spec.tests.expressions.ExpressionParserTestCase"/>
-    <classEntry path="org.utilkit.expressions.ExpressionContext"/>
-    <classEntry path="org.utilkit.expressions.parsers.MathematicalExpressionParser"/>
-    <classEntry path="org.utilkit.expressions.ExpressionParserConfiguration"/>
-    <classEntry path="org.utilkit.spec.tests.expressions.MathematicalExpressionParserTestCase"/>
-    <classEntry path="org.utilkit.expressions.parsers.BooleanExpressionParser"/>
-    <classEntry path="org.utilkit.spec.tests.expressions.BooleanExpressionParserTestCase"/>
-    <classEntry path="org.utilkit.expressions.parsers.AlgebraicExpressionParser"/>
-    <classEntry path="org.utilkit.expressions.parsers.FunctionExpressionParser"/>
-    <classEntry path="org.utilkit.expressions.ExpressionEngine"/>
     <classEntry path="org.utilkit.spec.tests.expressions.AlgebraicExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.BooleanExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.ExpressionParserTestCase"/>
     <classEntry path="org.utilkit.spec.tests.expressions.FunctionExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.spec.tests.expressions.MathematicalExpressionParserTestCase"/>
+    <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
+    <classEntry path="org.utilkit.util.Platform"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

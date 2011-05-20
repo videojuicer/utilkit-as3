@@ -43,7 +43,7 @@ package org.utilkit.parser
 			return this._rawData;
 		}
 		
-		public function get base64():Boolean
+		public function get isBase64():Boolean
 		{
 			return this._base64;
 		}
@@ -97,7 +97,7 @@ package org.utilkit.parser
 			this._rawData = unescape(uriData);
 			
 			// Decode and store data
-			this._data = (this.base64)? Base64.decode(this.rawData) : this.rawData;
+			this._data = (this.isBase64)? Base64.decode(this.rawData) : this.rawData;
 		}
 		
 	}

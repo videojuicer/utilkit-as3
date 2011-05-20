@@ -18,14 +18,13 @@ package org.utilkit.expressions.parsers
 			
 			if (isNaN(result))
 			{
-				switch (operator)
+				if (operator == AlgebraicOperator.RELATIONAL_EQUALS)
 				{
-					case AlgebraicOperator.RELATIONAL_EQUALS:
-						result = (previous == current ? 1 : 0);
-						break;
-					case AlgebraicOperator.RELATIONAL_NOT_EQUALS:
-						result = (previous != current ? 1 : 0);
-						break;
+					result = (previous == current ? 1 : 0);
+				}
+				else if (operator == AlgebraicOperator.RELATIONAL_NOT_EQUALS)
+				{
+					result = (previous != current ? 1 : 0);
 				}
 			}
 			
