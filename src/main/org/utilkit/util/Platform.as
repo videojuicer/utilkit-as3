@@ -126,8 +126,10 @@ package org.utilkit.util
 			return operatingSystem;
 		}
 		
-		public static function garbageCollection():void
+		public static function garbageCollection():uint
 		{
+			var current:int = Platform.memoryUsed();
+			
 			try
 			{
 				new LocalConnection().connect('void');
@@ -135,13 +137,15 @@ package org.utilkit.util
 			}
 			catch (e:*)
 			{
-				return;
+				
 			}
+			
+			return (current - Platform.memoryUsed());
 		}
 		
-		public static function gc():void
+		public static function gc():uint
 		{
-			Platform.garbageCollection();
+			return Platform.garbageCollection();
 		}
 		
 		public static function memoryUsed():int
