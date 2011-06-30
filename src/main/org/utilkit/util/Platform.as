@@ -3,6 +3,8 @@ package org.utilkit.util
 	import flash.net.LocalConnection;
 	import flash.system.Capabilities;
 	import flash.system.System;
+	
+	import org.utilkit.UtilKit;
 
 	public class Platform
 	{
@@ -140,7 +142,11 @@ package org.utilkit.util
 				
 			}
 			
-			return (current - Platform.memoryUsed());
+			var freed:uint = (current - Platform.memoryUsed());
+			
+			UtilKit.logger.debug("Garbage Collection: "+freed+" bytes freed");
+			
+			return freed;
 		}
 		
 		public static function gc():uint

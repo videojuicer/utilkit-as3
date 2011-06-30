@@ -185,7 +185,7 @@ package org.utilkit.net
 		{
 			var position:int = this._buffer.length;
 		
-			UtilKit.logger.benchmark("Received socket data from "+position+" starting to process messages");
+			UtilKit.logger.debug("Received socket data from "+position+" starting to process messages");
 			
 			this.socket.readBytes(this._buffer, position);
 			
@@ -193,7 +193,7 @@ package org.utilkit.net
 			// we processed contained the starting byte sequence for our new batch
 			position = 0;
 			
-			UtilKit.logger.benchmark("Finished creating buffer with a total length of "+this._buffer.length);
+			UtilKit.logger.debug("Finished creating buffer with a total length of "+this._buffer.length);
 			
 			if (this._headerState <= 4)
 			{
