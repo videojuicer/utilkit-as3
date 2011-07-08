@@ -18,5 +18,27 @@ package org.utilkit.util
 		{
 			return !isNaN(parseInt(value.toString()));
 		}
+		
+		public static function toHumanReadableString(value:Number):String
+		{
+			var str:String = value.toString();
+			var result:String = '';
+			
+			while (str.length > 3)
+			{
+				var chunk:String = str.substr(-3);
+				
+				str = str.substr(0, str.length - 3);
+				
+				result = ',' + chunk + result
+			}
+			
+			if (str.length > 0)
+			{
+				result = str + result
+			}
+			
+			return result
+		}
 	}
 }
