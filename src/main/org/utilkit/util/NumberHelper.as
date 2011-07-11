@@ -21,7 +21,7 @@ package org.utilkit.util
 		
 		public static function toHumanReadableString(value:Number):String
 		{
-			var str:String = value.toString();
+			var str:String = Math.round(value).toString();
 			var result:String = '';
 			
 			while (str.length > 3)
