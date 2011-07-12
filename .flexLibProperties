@@ -53,6 +53,7 @@
     <classEntry path="org.utilkit.spec.tests.expressions.MathematicalExpressionParserTestCase"/>
     <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
     <classEntry path="org.utilkit.util.Platform"/>
+    <classEntry path="org.utilkit.net.LocalStorage"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
