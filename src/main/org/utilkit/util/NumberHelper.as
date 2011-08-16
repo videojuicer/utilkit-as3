@@ -2,6 +2,13 @@ package org.utilkit.util
 {
 	public class NumberHelper
 	{
+		public static function withinTolerance(a:Number, b:Number, tolerance:Number = 1.0):Boolean
+		{
+			var diff:Number = Math.abs(a - b);
+			
+			return (diff <= tolerance);
+		}
+		
 		public static function zeroPad(number:int, minWidth:int):String
 		{
 			var ret:String = "" + number.toString();
