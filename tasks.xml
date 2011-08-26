@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="utilkit" basedir=".">
+    <description>Provides build tasks for UtilKit-as3, cannot be used standalone.</description>
+    
+    <property name="utilkit.target" value="utilkit-as3.swc" />
+    <property name="utilkit.libs" value="${basedir}/libs" />
+    <property name="utilkit.src.main" value="${basedir}/src/main" />
+    <property name="utilkit.src.test" value="${basedir}/src/test" />
+
+    <property name="as3crypto.path" value="${tmp.path}/utilkit-as3crypto-trunk-src" />
+    
+    <property file="build.properties" />
+    
+    <taskdef resource="flexTasks.tasks" classpath="${flex.path}/ant/lib/flexTasks.jar" />
+    
+    <target name="utilkit.setup">
+        <antcall target="utilkit.as3crypto.compile" />
+    </target>
+
+	<target name="utilkit.dependencies">
+		
+	</target>
+    
+    <target name="utilkit.as3crypto.compile">
+        <echo>Fetching as3crypto source from Google Code ...</echo>
+        
+        <exec executable="svn" spawn="false" dir="${root.path}">
+  	        <arg line="checkout --quiet" />
+  	        <arg line="http://as3crypto.googlecode.com/svn/trunk/as3crypto/" />
+  	        <arg line="${as3crypto.path}" />
+  	    </exec>
+  	    
+  	    <echo>Patching ...</echo>
+  	    
+  	    <patch patchfile="${utilkit.libs}/patches/as3crypto.patch"
+  	        dir="${as3crypto.path}" strip="0" ignorewhitespace="true" reverse="false" quiet="false" failonerror="true" />
+  	    
+  	    <echo>Compiling into SWC ...</echo>
+  	    
+        <compc output="${target.path}/as3crypto.swc"  
+            as3="true" benchmark="${build.verbose}" debug="${build.debug}" incremental="false" fork="false"
+            keep-generated-actionscript="${build.debug}" link-report="${report.path}/as3crypto-link-report.xml"
+            locale="en_US" optimize="${build.optimise}" target-player="10.0.0" warnings="true"
+            include-classes="com.hurlant.crypto.Crypto com.hurlant.crypto.tls.TLSSocket">
+            
+            <define name="BUILD::DEBUG" value="${build.debug}" />
+            <define name="BUILD::SSL" value="${build.ssl}" />
+            
+            <source-path path-element="${as3crypto.path}/src" />
+            
+            <compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
+            <compiler.headless-server>true</compiler.headless-server>
+        </compc>
+        
+        <delete dir="${as3crypto.path}" verbose="false" />
+        <delete file="${utilkit.libs}/as3crypto.swc" />
+        
+        <move file="${target.path}/as3crypto.swc" todir="${utilkit.libs}" />
+        
+        <echo>Finished compiling into SWC</echo>
+    </target>
+    
+    <target name="utilkit.compile">
+        <echo>Compiling into ${target.path}/${utilkit.target} ...</echo>
+
+        <compc output="${target.path}/${utilkit.target}"  
+            as3="true" benchmark="${build.verbose}" debug="${build.debug}" incremental="false" fork="false"
+            keep-generated-actionscript="${build.debug}" link-report="${report.path}/link-report.xml"
+            locale="en_US" optimize="${build.optimise}" target-player="10.0.0" warnings="true">
+            
+            <define name="BUILD::DEBUG" value="${build.debug}" />
+            <define name="BUILD::SSL" value="${build.ssl}" />
+            
+            <source-path path-element="${utilkit.src.main}" />
+            <include-sources dir="${utilkit.src.main}" includes="*" />
+            
+            <library-path dir="${utilkit.libs}" append="true">
+				<include name="as3crypto.swc" />
+			</library-path>
+            
+            <compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
+            <compiler.headless-server>true</compiler.headless-server>
+        </compc>
+        
+        <echo>Finished compiling: ${utilkit.target}</echo>
+    </target>
+    
+    <target name="utilkit.optimise">
+        
+    </target>
+    
+    <target name="utilkit.compile.test">
+        <echo>Compiling tests into SWF ...</echo>
+        
+        <mxmlc output="${target.path}/utilkit-as3-specs.swf" file="${utilkit.src.test}/SpecRunner.mxml"
+            as3="true" benchmark="${build.verbose}" debug="${build.debug}" incremental="false" fork="false"
+            keep-generated-actionscript="true"
+            locale="en_US" optimize="${build.optimise}" target-player="10.0.0" warnings="true">
+            
+            <define name="BUILD::DEBUG" value="${build.debug}" />
+            <define name="BUILD::SSL" value="${build.ssl}" />
+            
+            <source-path path-element="${utilkit.src.main}" />
+            <source-path path-element="${utilkit.src.test}" />
+            
+      			<library-path dir="${utilkit.libs}" append="true">
+							<include name="as3crypto.swc" />
+							<include name="flexunit-4.1.0_RC2-4-as3_4.1.0.16076.swc" />
+							<include name="flexunit-cilistener-4.1.0_RC2-4-4.1.0.16076.swc" />
+						</library-path>
+            
+            <compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
+            <compiler.headless-server>true</compiler.headless-server>
+        </mxmlc>
+        
+        <echo>Finished compiling tests into SWF</echo>
+    </target>
+</project>

@@ -1,9 +1,12 @@
 package org.utilkit.net
 {
-	import com.hurlant.crypto.tls.TLSConfig;
-	import com.hurlant.crypto.tls.TLSEngine;
-	import com.hurlant.crypto.tls.TLSSecurityParameters;
-	import com.hurlant.crypto.tls.TLSSocket;
+	BUILD::SSL
+	{
+		import com.hurlant.crypto.tls.TLSConfig;
+		import com.hurlant.crypto.tls.TLSEngine;
+		import com.hurlant.crypto.tls.TLSSecurityParameters;
+		import com.hurlant.crypto.tls.TLSSocket;
+	}
 	
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
@@ -40,13 +43,19 @@ package org.utilkit.net
 		protected var _path:String;
 		protected var _origin:String;
 		
+		protected var _timeout:uint = 8000;
+		
 		protected var _expectedDigest:String;
 		protected var _buffer:ByteArray;
 		protected var _dataQueue:Vector.<ByteArray>;
 
 		protected var _socket:Socket;
-		protected var _secureSocket:TLSSocket;
-		protected var _secureConfiguration:TLSConfig;
+		
+		BUILD::SSL
+		{
+			protected var _secureSocket:TLSSocket;
+			protected var _secureConfiguration:TLSConfig;
+		}
 		
 		protected var _readyState:uint = WebSocket.CONNECTING;
 		protected var _headerState:uint = WebSocket.CONNECTING;
@@ -88,6 +97,14 @@ package org.utilkit.net
 			this._port = parseInt(matches[4] || "80");
 			this._path = matches[5] || "/";
 			
+		
+			if (BUILD::SSL == false && this.protocol.toLowerCase() == "wss")
+			{
+				throw new IllegalOperationError("WSS protocol not supported, SSL libraries not available " + BUILD::SSL);
+				
+				return;
+			}
+			
 			if (this.protocol.toLowerCase() != "ws" && this.protocol.toLowerCase() != "wss")
 			{
 				throw new IllegalOperationError(this.protocol+" protocol not supported.");
@@ -107,21 +124,30 @@ package org.utilkit.net
 			this._buffer = new ByteArray();
 			this._dataQueue = new Vector.<ByteArray>();
 			
-			if (this.protocol == "wss")
-			{
-				this._secureConfiguration = new TLSConfig(TLSEngine.CLIENT, null, null, null, null, null, TLSSecurityParameters.PROTOCOL_VERSION);
-				this._secureConfiguration.trustAllCertificates = true;
-				this._secureConfiguration.trustSelfSignedCertificates = true;
-				this._secureConfiguration.ignoreCommonNameMismatch = true;
-				
-				this._secureSocket = new TLSSocket();
-				this._secureSocket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
-			}
-			else
-			{
-				this._socket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
-			}
+			this._socket.timeout = this.timeout;
 			
+			this._socket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
+			
+			BUILD::SSL
+			{
+				if (this.protocol == "wss")
+				{
+					this._socket.removeEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
+					
+					this._secureConfiguration = new TLSConfig(TLSEngine.CLIENT, null, null, null, null, null, TLSSecurityParameters.PROTOCOL_VERSION);
+					
+					this._secureConfiguration.trustAllCertificates = true;
+					this._secureConfiguration.trustSelfSignedCertificates = true;
+					this._secureConfiguration.ignoreCommonNameMismatch = true;
+			
+					this._secureSocket = new TLSSocket();
+					
+					this._secureSocket.timeout = this.timeout;
+					
+					this._secureSocket.addEventListener(ProgressEvent.SOCKET_DATA, this.onSocketData);
+				}
+			}
+
 			this._socket.addEventListener(Event.CONNECT, this.onSocketConnect);
 			this._socket.addEventListener(Event.CLOSE, this.onSocketClose);
 			this._socket.addEventListener(IOErrorEvent.IO_ERROR, this.onSocketIOError);
@@ -138,10 +164,13 @@ package org.utilkit.net
 		{
 			UtilKit.logger.debug("WebSocket received connect response, sending reply ...");
 			
-			if (this.protocol == "wss")
+			BUILD::SSL
 			{
-				UtilKit.logger.benchmark("Starting TLS on WebSocket connection ..");
-				this._secureSocket.startTLS(this._socket, this.hostname, this._secureConfiguration);
+				if (this.protocol == "wss")
+				{
+					UtilKit.logger.benchmark("Starting TLS on WebSocket connection ..");
+					this._secureSocket.startTLS(this._socket, this.hostname, this._secureConfiguration);
+				}
 			}
 			
 			var key1:String = this.generateKey();
@@ -298,20 +327,20 @@ package org.utilkit.net
 		
 		protected function onSocketIOError(e:IOErrorEvent):void
 		{
-			UtilKit.logger.error("IO error occured on the Socket", e.text);
+			UtilKit.logger.error("IO error occurred on the Socket", e.text);
 			
 			this.close();
 			
-			this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "IO error occured on the socket connection: "+ e.text));
+			this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "IO error occurred on the socket connection: "+ e.text));
 		}
 		
 		protected function onSocketSecurityError(e:SecurityErrorEvent):void
 		{
-			UtilKit.logger.error("Security error occured on the Socket");
+			UtilKit.logger.error("Security error occurred on the Socket");
 			
 			this.close();
 			
-			this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Security error occured on the socket connection: "+ e.text));
+			this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Security error occurred on the socket connection: "+ e.text));
 		}
 		
 		public function get readyState():uint
@@ -354,11 +383,24 @@ package org.utilkit.net
 			return this._origin;
 		}
 		
+		public function get timeout():uint
+		{
+			return this._timeout;
+		}
+		
+		public function set timeout(value:uint):void
+		{
+			this._timeout = value;
+		}
+		
 		protected function get socket():Socket
 		{
-			if (this.protocol == "wss")
+			BUILD::SSL
 			{
-				return (this._secureSocket as Socket);
+				if (this.protocol == "wss")
+				{
+					return (this._secureSocket as Socket);
+				}
 			}
 			
 			return this._socket;
@@ -423,11 +465,33 @@ package org.utilkit.net
 			{
 				this._readyState = WebSocket.CLOSING;
 
-				this.socket.writeByte(0xff);
-				this.socket.writeByte(0x00);
+				if (this.socket != null)
+				{
+					try
+					{
+						BUILD::SSL
+						{
+							if (this._secureSocket != null)
+							{
+								this._secureSocket.close();
+							}
+						};
+						
+						this.socket.writeByte(0xff);
+						this.socket.writeByte(0x00);
 				
-				this.socket.flush();
-				this.socket.close();
+						this.socket.flush();
+						this.socket.close();
+					}
+					catch (e:Error)
+					{
+						// ignore, sometimes the socket exists but can't be wrote to
+					}
+					finally
+					{
+						this._socket = null;
+					}
+				}
 			}
 		}
 		

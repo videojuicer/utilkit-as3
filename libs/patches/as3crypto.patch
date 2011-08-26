@@ -1,0 +1,43 @@
+Index: src/com/hurlant/util/asn1/type/BooleanType.as
+===================================================================
+--- src/com/hurlant/util/asn1/type/BooleanType.as	(revision 28)
++++ src/com/hurlant/util/asn1/type/BooleanType.as	(working copy)
+@@ -1,10 +1,23 @@
+ package com.hurlant.util.asn1.type {
+ 	import flash.net.registerClassAlias;
++	import flash.utils.ByteArray;
+ 	
+ 	public class BooleanType extends ASN1Type {
+ 		registerClassAlias("com.hurlant.util.asn1.BooleanType", BooleanType);
+ 		public function BooleanType() {
+ 			super(ASN1Type.BOOLEAN);
+ 		}
++		
++		/**
++		 * Decodes a boolean from the DER stream (one octet)
++		 * 
++		 * @param s
++		 * @param length
++		 * @return true if the next byte is nonzero.
++		 * 
++		 */
++		protected override function fromDERContent(s:ByteArray, length:int):* {
++			return s.readBoolean();
++		}
+ 	}
+ }
+\ No newline at end of file
+Index: src/com/hurlant/util/asn1/type/ASN1Type.as
+===================================================================
+--- src/com/hurlant/util/asn1/type/ASN1Type.as	(revision 28)
++++ src/com/hurlant/util/asn1/type/ASN1Type.as	(working copy)
+@@ -147,7 +147,8 @@
+ 		}
+ 		
+ 		protected function fromDERContent(s:ByteArray, length:int):* {
+-			throw new Error("pure virtual function call: fromDERContent");
++			//throw new Error("pure virtual function call: fromDERContent");
++			return null;
+ 		}
+ 		
+ 		protected function readDERTag(s:ByteArray, classValue:int=UNIVERSAL, 

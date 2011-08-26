@@ -27,6 +27,7 @@
     <classEntry path="org.utilkit.logger.renderers.BrowserConsoleRenderer"/>
     <classEntry path="org.utilkit.logger.renderers.LogRenderer"/>
     <classEntry path="org.utilkit.logger.renderers.TraceRenderer"/>
+    <classEntry path="org.utilkit.net.LocalStorage"/>
     <classEntry path="org.utilkit.net.RedirectLoader"/>
     <classEntry path="org.utilkit.net.WebSocket"/>
     <classEntry path="org.utilkit.net.WebSocketEvent"/>
@@ -40,6 +41,7 @@
     <classEntry path="org.utilkit.util.Hex"/>
     <classEntry path="org.utilkit.util.NumberHelper"/>
     <classEntry path="org.utilkit.util.ObjectUtil"/>
+    <classEntry path="org.utilkit.util.Platform"/>
     <classEntry path="org.utilkit.util.StringUtil"/>
     <classEntry path="org.utilkit.util.TimeHelper"/>
     <classEntry path="org.utilkit.util.UrlUtil"/>
@@ -52,8 +54,6 @@
     <classEntry path="org.utilkit.spec.tests.expressions.FunctionExpressionParserTestCase"/>
     <classEntry path="org.utilkit.spec.tests.expressions.MathematicalExpressionParserTestCase"/>
     <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
-    <classEntry path="org.utilkit.util.Platform"/>
-    <classEntry path="org.utilkit.net.LocalStorage"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
