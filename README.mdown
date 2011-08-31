@@ -1,0 +1,12 @@
+Compile (with TLS libraries)
+============================
+
+	ant compile
+	
+	
+Compile (without TLS libraries)
+===============================
+
+	ant compile -Dbuild.ssl=false
+	
+
