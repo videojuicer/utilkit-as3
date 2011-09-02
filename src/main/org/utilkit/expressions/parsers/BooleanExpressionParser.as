@@ -17,6 +17,9 @@ package org.utilkit.expressions.parsers
 			this.configuration.operators.push(AlgebraicOperator.HUMAN_RELATIONAL_NOT_EQUALS);
 			this.configuration.operators.push(AlgebraicOperator.HUMAN_RELATIONAL_GREATER_THAN);
 			this.configuration.operators.push(AlgebraicOperator.HUMAN_RELATIONAL_LESS_THAN);
+		
+			this.configuration.operators.push(AlgebraicOperator.GATE_AND);
+			this.configuration.operators.push(AlgebraicOperator.GATE_OR);
 		}
 		
 		public override function calculateSum(previous:Object, operator:String, current:Object):Number
@@ -46,11 +49,17 @@ package org.utilkit.expressions.parsers
 						break;
 					case AlgebraicOperator.RELATIONAL_GREATER_THAN:
 					case AlgebraicOperator.HUMAN_RELATIONAL_GREATER_THAN:
-						result = (current > previous ? 1 : 0);
+						result = (previous > current ? 1 : 0);
 						break;
 					case AlgebraicOperator.RELATIONAL_LESS_THAN:
 					case AlgebraicOperator.HUMAN_RELATIONAL_LESS_THAN:
-						result = (current < previous ? 1 : 0);
+						result = (previous < current ? 1 : 0);
+						break;
+					case AlgebraicOperator.GATE_AND:
+						result = (previous && current ? 1 : 0);
+						break;
+					case AlgebraicOperator.GATE_OR:
+						result = (previous || current ? 1 : 0);
 						break;
 				}
 			}

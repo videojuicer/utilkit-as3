@@ -87,5 +87,38 @@ package org.utilkit.expressions
 		{
 			this._functions = value;
 		}
+		
+		public function matchesDeclaration(token:String, character:String):Boolean
+		{
+			trace("token -> "+token);
+			
+			if (token.length >= 3)
+			{
+				for (var i:int = 0; i < this.functions.length; i++)
+				{
+					var method:String = (this.functions.getKeyAt(i) as String);
+					
+					if (method.substr(0, token.length) == token)
+					{
+						if (method.substr(0, (token.length + 1)) == token.concat(character))
+						{
+							return true;
+						}
+					}
+				}
+				
+				for (var j:int = 0; j < this.variables.length; j++)
+				{
+					var variable:String = (this.variables.getKeyAt(j) as String);
+				
+					if (variable.substr(0, token.length) == token)
+					{
+						//return true;
+					}
+				}
+			}
+			
+			return false;
+		}
 	}
 }

@@ -71,6 +71,10 @@ package org.utilkit.expressions.parsers
 					// set the token to our context result, so we use it with the previous
 					token = child;
 				}
+				else if (this.declaredAndAvailable(token))
+				{
+					
+				}
 				else
 				{
 					var operatorFound:Boolean = false;
@@ -139,6 +143,11 @@ package org.utilkit.expressions.parsers
 			}
 			
 			return result;
+		}
+		
+		public function declaredAndAvailable(value:Object):Boolean
+		{
+			return false;
 		}
 		
 		public function calculateValue(value:Object):Object

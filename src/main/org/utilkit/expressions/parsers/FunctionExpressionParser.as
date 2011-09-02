@@ -15,7 +15,7 @@ package org.utilkit.expressions.parsers
 			{
 				var functionName:String = value.name;
 				var functionArguments:Vector.<Object> = value.arguments;
-				
+
 				// switch, previous + current for the function result
 				if (this.configuration.functions.hasItem(functionName))
 				{

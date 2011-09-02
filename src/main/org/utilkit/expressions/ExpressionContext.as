@@ -180,33 +180,36 @@ package org.utilkit.expressions
 				
 				var operatorFound:Boolean = false;
 				
-				// find an operator
-				for (var k:int = 0; k < operators.length; k++)
+				if (!this.expressionParser.configuration.matchesDeclaration(token, character))
 				{
-					var operator:String = operators[k];
-					
-					// do we match?
-					if (this.matches(remainder, operator))
+					// find an operator
+					for (var k:int = 0; k < operators.length; k++)
 					{
-						if (token != null && token != "")
+						var operator:String = operators[k];
+						
+						// do we match?
+						if (this.matches(remainder, operator))
 						{
-							// drop our current token onto the stack
-							this.tokens.push(token);
+							if (token != null && token != "")
+							{
+								// drop our current token onto the stack
+								this.tokens.push(token);
+							}
+							
+							// clear the token
+							token = "";
+							
+							// push the operator onto the stack
+							this.tokens.push(operator);
+							
+							// skip over the operator in the string
+							i = i + (operator.length - 1);
+							
+							// no need to build the operator character by character
+							operatorFound = true;
+							
+							break;
 						}
-						
-						// clear the token
-						token = "";
-						
-						// push the operator onto the stack
-						this.tokens.push(operator);
-						
-						// skip over the operator in the string
-						i = i + (operator.length - 1);
-						
-						// no need to build the operator character by character
-						operatorFound = true;
-						
-						break;
 					}
 				}
 				

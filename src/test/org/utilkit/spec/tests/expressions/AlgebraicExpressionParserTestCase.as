@@ -50,5 +50,38 @@ package org.utilkit.spec.tests.expressions
 			
 			Assert.assertEquals(151, results);
 		}
+		
+		[Test(description="Tests that an expression can use AND gates")]
+		public function canHasAndGates():void
+		{
+			Assert.assertTrue(this._parser.begin("(100 == 100) && (5 != 10)"));
+			Assert.assertTrue(this._parser.begin("(100 != 101) && (10 == 10)"));
+				
+			Assert.assertFalse(this._parser.begin("(100 == 101) && (10 == 10)"));
+			Assert.assertFalse(this._parser.begin("(100 == 100) && (10 < 10)"));
+		}
+		
+		[Test(description="Tests that an expression can use OR gates")]
+		public function canHasOrGates():void
+		{
+			Assert.assertTrue(this._parser.begin("(100 == 100) || (5 < 10)"));
+			Assert.assertTrue(this._parser.begin("(100 != 101) || (10 == 10)"));
+			
+			Assert.assertTrue(this._parser.begin("(100 == 101) || (10 == 10)"));
+			Assert.assertTrue(this._parser.begin("(100 == 100) || (10 < 10)"));
+			
+			Assert.assertFalse(this._parser.begin("(100 == 101) && (10 != 10)"));
+			Assert.assertFalse(this._parser.begin("(100 == 101) && (10 < 10)"));
+		}
+		
+		[Test(description="Tests that an expression can use both gates")]
+		public function canHasGates():void
+		{
+			Assert.assertTrue(this._parser.begin("((100 == 100) && (5 == 10)) || 1 == 1"));
+			Assert.assertTrue(this._parser.begin("(100 != 101) && (10 == 10)"));
+			
+			Assert.assertFalse(this._parser.begin("(100 == 101) && (10 == 10) || (500 == 100 || 10 == 12))"));
+			Assert.assertFalse(this._parser.begin("((100 == 100) && (10 < 10)) || (2 < 0)"));
+		}
 	}
 }

@@ -14,6 +14,10 @@ package org.utilkit.constants
 		public static const RELATIONAL_GREATER_THAN:String = ">";
 		public static const RELATIONAL_LESS_THAN:String = "<";
 		
+		// gate operators
+		public static const GATE_AND:String = "&&";
+		public static const GATE_OR:String = "||";
+		
 		// human versions
 		
 		// arithmetic operators
