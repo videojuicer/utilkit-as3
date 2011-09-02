@@ -90,8 +90,6 @@ package org.utilkit.expressions
 		
 		public function matchesDeclaration(token:String, character:String):Boolean
 		{
-			trace("token -> "+token);
-			
 			if (token.length >= 3)
 			{
 				for (var i:int = 0; i < this.functions.length; i++)
