@@ -134,16 +134,14 @@ package org.utilkit.parser
 			{
 				this._applicationName = result[FMSURLParser.APPLICATION_NAME_INDEX];
 				this._instanceName = "";
-				this._streamName = "";
-				
+
 				// are we using an instance?
 				if (this.path.search(new RegExp("^.*\/"+FMSURLParser.DEFAULT_INSTANCE_NAME, "i")) > -1)
 				{
 					this._useInstance = true;
 				}
 				
-				var streamNameIndex:uint = FMSURLParser.STREAM_NAME_INDEX;
-				
+				/*
 				if (this._useInstance)
 				{
 					this._instanceName = result[FMSURLParser.INSTANCE_NAME_INDEX];
@@ -152,17 +150,29 @@ package org.utilkit.parser
 				{
 					streamNameIndex = FMSURLParser.INSTANCE_NAME_INDEX;
 				}
+				*/
 				
-				// search for the stream name
-				for (var i:uint = streamNameIndex; i < result.length; i++)
+				if (this._streamName == "" || this._streamName == null)
 				{
-					this._streamName += result[i];
+					this._streamName = "";
+					
+					var streamNameIndex:uint = FMSURLParser.STREAM_NAME_INDEX;
+					
+					// search for the stream name
+					for (var i:uint = streamNameIndex; i < result.length; i++)
+					{
+						this._streamName += result[i];
+					}
+					
+					if (this._streamName == null || this._streamName == "")
+					{
+						// check if the stream name is specified in the query params
+						this._streamName = this.getParamValue(FMSURLParser.QUERY_PARAM_STREAM_NAME);
+					}
 				}
-				
-				if (this._streamName == null || this._streamName == "")
+				else
 				{
-					// check if the stream name is specified in the query params
-					this._streamName = this.getParamValue(FMSURLParser.QUERY_PARAM_STREAM_NAME);
+					this._instanceName = result[FMSURLParser.INSTANCE_NAME_INDEX];
 				}
 				
 				// type check
