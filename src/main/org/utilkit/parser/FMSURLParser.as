@@ -111,7 +111,7 @@ package org.utilkit.parser
 			
 			return this._streamName+queryString;
 		}
-		
+
 		public override function parse(url:String):void
 		{
 			super.parse(url);

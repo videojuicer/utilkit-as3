@@ -129,23 +129,21 @@ package org.utilkit.parser
 		 */
 		public function get inlineExtension():String
 		{
-			var i:int = this.path.indexOf(":");
+			var path:String = this.url.replace(this.hostname, "");
+			
+			var i:int = path.indexOf(":");
 			
 			if (i != -1)
 			{
-				var k:String = this.path.substr(0, i);
+				var k:String = path.substr(0, i);
 				var s:int = k.lastIndexOf("/");
 				
-				if (s == -1)
+				if (s < k.lastIndexOf("="))
 				{
-					s = 0;
+					s = k.lastIndexOf("=");
 				}
-				else
-				{
-					s++;
-				}
-				
-				return k.substr(s, i);
+
+				return k.substr(s + 1, i);
 			}
 			
 			return null
