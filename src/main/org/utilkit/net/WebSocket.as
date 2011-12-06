@@ -66,7 +66,7 @@ package org.utilkit.net
 		protected var _path:String;
 		protected var _origin:String;
 		
-		protected var _timeout:uint = 8000;
+		protected var _timeout:uint = 5000;
 		
 		protected var _expectedDigest:String;
 		protected var _buffer:ByteArray;
