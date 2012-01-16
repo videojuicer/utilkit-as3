@@ -97,7 +97,7 @@ package org.utilkit.logger
 			
 			if (this._targetObject != null)
 			{
-				s += " on '"+this._targetObject.toString()+"'";
+				s += " "+this._targetObject.toString()+"";
 			}
 			
 			return s;

@@ -84,6 +84,18 @@ package org.utilkit.util
 			return agent;
 		}
 		
+		public static function get browserLanguage():String
+		{
+			var language:String = Environment.callExternalMethod("(navigator.browserLanguage ? navigator.browserLanguage : (navigator.language ? navigator.language : navigator.userLanguage)).toString") as String;
+			
+			if (language != null && language.indexOf("-") != -1)
+			{
+				language = language.substr(0, language.indexOf("-"));
+			}
+			
+			return language;
+		}
+		
 		public static function callExternalMethod(method:String):*
 		{
 			var result:* = null;
