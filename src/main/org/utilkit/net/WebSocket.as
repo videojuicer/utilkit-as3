@@ -287,37 +287,43 @@ package org.utilkit.net
 				// process message
 				var states:Vector.<WebSocketState> = WebSocket.processMessage(this._buffer, position);
 				
-				var readPosition:int = 0;
-				
-				for (var i:int = 0; i < states.length; i++)
+				// only attempt reading if we have been able to parse a state, otherwise we want to wait
+				// for more data to arrive, and then reprocess the whole buffer. this way messages
+				// can be split over multiple packets
+				if (states.length > 0)
 				{
-					var state:WebSocketState = states[i];
+					var readPosition:int = 0;
 					
-					switch (state.state)
+					for (var i:int = 0; i < states.length; i++)
 					{
-						case WebSocketState.STATE_MESSAGE_ERROR:
-							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Data must start with \\x00"));
-							break;
-						case WebSocketState.STATE_MESSAGE_RECEIVED:
-							this.dispatchEvent(new WebSocketEvent(WebSocketEvent.MESSAGE, "Received data packet successfully", state.data));
-							break;
-						case WebSocketState.STATE_MESSAGE_CLOSE:
-							this.close();
-							break;
+						var state:WebSocketState = states[i];
+						
+						switch (state.state)
+						{
+							case WebSocketState.STATE_MESSAGE_ERROR:
+								this.dispatchEvent(new WebSocketEvent(WebSocketEvent.ERROR, "Data must start with \\x00"));
+								break;
+							case WebSocketState.STATE_MESSAGE_RECEIVED:
+								this.dispatchEvent(new WebSocketEvent(WebSocketEvent.MESSAGE, "Received data packet successfully", state.data));
+								break;
+							case WebSocketState.STATE_MESSAGE_CLOSE:
+								this.close();
+								break;
+						}
+						
+						if (states[i].position > readPosition)
+						{
+							readPosition = state.position;
+						}
 					}
 					
-					if (states[i].position > readPosition)
-					{
-						readPosition = state.position;
-					}
+					UtilKit.logger.info("WebSocket - Buffer clean requested on "+this._buffer.length+", removing from "+readPosition);
+					
+					// remove the processed data from the buffer
+					this._buffer = WebSocket.removeBufferBefore(this._buffer, readPosition);
+					
+					UtilKit.logger.info("WebSocket - Buffer cleaned to "+this._buffer.length+"");
 				}
-				
-				UtilKit.logger.info("WebSocket - Buffer clean requested on "+this._buffer.length+", removing from "+readPosition);
-				
-				// remove the processed data from the buffer
-				this._buffer = WebSocket.removeBufferBefore(this._buffer, readPosition);
-				
-				UtilKit.logger.info("WebSocket - Buffer cleaned to "+this._buffer.length+"");
 			}
 		}
 		

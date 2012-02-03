@@ -55,6 +55,7 @@
     <classEntry path="org.utilkit.spec.tests.expressions.MathematicalExpressionParserTestCase"/>
     <classEntry path="org.utilkit.spec.tests.net.WebSocketTestCase"/>
     <classEntry path="org.utilkit.logger.Benchmark"/>
+    <classEntry path="org.utilkit.util.ByteHelper"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
