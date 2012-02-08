@@ -287,7 +287,7 @@ package org.utilkit.net
 				// process message
 				var states:Vector.<WebSocketState> = WebSocket.processMessage(this._buffer, position);
 				
-				// only attempt reading if we have been able to parse a state, otherwise we want to wait
+				// only attempt reading if we have been able to parse at least one state, otherwise we want to wait
 				// for more data to arrive, and then reprocess the whole buffer. this way messages
 				// can be split over multiple packets
 				if (states.length > 0)
