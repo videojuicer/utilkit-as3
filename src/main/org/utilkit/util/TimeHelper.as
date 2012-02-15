@@ -66,5 +66,70 @@ package org.utilkit.util
 		{
 			return int(milliseconds / 1000);
 		}
+		
+		public static function smilTimeToMilliseconds(timeString:String):int
+		{
+			var milliseconds:int = 0;
+			
+			if (timeString == null || timeString == "")
+			{
+				milliseconds = -100;
+			}
+			// parse clock values
+			else if (timeString.indexOf(":") != -1)
+			{
+				var split:Array = timeString.split(":");
+				
+				var hours:uint = 0;
+				var minutes:uint = 0;
+				var seconds:uint = 0;
+				
+				// half clock
+				if (split.length < 3)
+				{
+					minutes = uint(split[0]);
+					seconds = uint(split[1]);
+				}
+					// full wall clock
+				else
+				{
+					hours = uint(split[0]);
+					minutes = uint(split[1]);
+					seconds = uint(split[2]);
+				}
+				
+				milliseconds = ((hours * 60 * 60 * 1000) + (minutes * 60 * 1000) + (seconds * 1000));
+			}
+			else
+			{
+				// hours
+				if (timeString.indexOf("h") != -1)
+				{
+					milliseconds = parseFloat(timeString.substring(0, timeString.indexOf("h"))) * 60 * 60 * 1000; 
+				}
+				// minutes
+				else if (timeString.indexOf("min") != -1)
+				{
+					milliseconds = parseFloat(timeString.substring(0, timeString.indexOf("min"))) * 60 * 1000; 
+				}
+				// milliseconds value
+				else if (timeString.indexOf("ms") != -1)
+				{
+					milliseconds = parseFloat(timeString.substring(0, timeString.indexOf("ms")));
+				}				
+				// seconds
+				else if (timeString.indexOf("s") != -1)
+				{
+					milliseconds = parseFloat(timeString.substring(0, timeString.indexOf("s"))) * 1000; 
+				}
+				// assume the time is declared in seconds
+				else
+				{
+					milliseconds = parseFloat(timeString) * 1000;
+				}
+			}
+			
+			return milliseconds;
+		}
 	}
 }
