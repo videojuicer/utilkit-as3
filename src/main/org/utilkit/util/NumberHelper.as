@@ -70,5 +70,40 @@ package org.utilkit.util
 			
 			return result
 		}
+		
+		/**
+		 * Checks if the specified value is a percentage by checking for 
+		 * the % symbol.
+		 * 
+		 * @param value Value is check.
+		 * 
+		 * @return True if the value is a percentage, false otherwise.
+		 */
+		public static function isPercentage(value:*):Boolean
+		{
+			var s:String = value.toString();
+			
+			return (s.lastIndexOf("%") != -1);
+		}
+		
+		/**
+		 * Converts a percentage number into an integer by removing the trailing %.
+		 * 
+		 * @param value Value to parse into an integer.
+		 * 
+		 * @return The integer result of the specified value.
+		 */
+		public static function percentageToInteger(value:*):uint
+		{
+			var s:String = value.toString();
+			var v:String = s.substr(0, s.indexOf("%"));
+			
+			return parseInt(v);
+		}
+		
+		public static function calculateAspectRatio(width:Number, height:Number):Number
+		{
+			return (width / height);
+		}
 	}
 }

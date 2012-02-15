@@ -50,6 +50,13 @@ package org.utilkit.util
 			return location;
 		}
 		
+		public static function get referrerURL():String
+		{
+			var referrer:String = Environment.callExternalMethod("document.referrer.toString") as String;
+			
+			return referrer;
+		}
+		
 		public static function get embeddedHostname():String
 		{
 			var hostname:String = Environment.callExternalMethod("document.location.hostname.toString") as String;
