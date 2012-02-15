@@ -38,7 +38,7 @@
     <classEntry path="org.utilkit.parser.URLParser"/>
     <classEntry path="org.utilkit.util.BooleanHelper"/>
     <classEntry path="org.utilkit.util.Environment"/>
-    <classEntry path="org.utilkit.crypto.Hex"/>
+    <classEntry path="org.utilkit.util.Hex"/>
     <classEntry path="org.utilkit.util.NumberHelper"/>
     <classEntry path="org.utilkit.util.ObjectUtil"/>
     <classEntry path="org.utilkit.util.Platform"/>

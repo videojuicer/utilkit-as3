@@ -21,7 +21,7 @@
  * 	Adam Livesley
  * 
  * ***** END LICENSE BLOCK ******/
-package org.utilkit.crypto
+package org.utilkit.util
 {
 	import flash.utils.ByteArray;
 

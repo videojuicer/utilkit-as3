@@ -50,7 +50,7 @@ package org.utilkit.net
 	import org.utilkit.UtilKit;
 	import org.utilkit.crypto.MD5;
 	import org.utilkit.net.WebSocketEvent;
-	import org.utilkit.crypto.Hex;
+	import org.utilkit.util.Hex;
 
 	[Event(name="message", type="org.vjuicer.io.WebSocketEvent")]
 	[Event(name="open", type="org.vjuicer.io.WebSocketEvent")]
