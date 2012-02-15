@@ -25,7 +25,6 @@ package org.utilkit.expressions.parsers
 {
 	import org.utilkit.constants.AlgebraicOperator;
 	import org.utilkit.expressions.ExpressionParserConfiguration;
-	import org.utilkit.util.NumberHelper;
 
 	public class MathematicalExpressionParser
 	{
@@ -35,7 +34,7 @@ package org.utilkit.expressions.parsers
 		protected var _tokenString:String = null;
 		
 		public function MathematicalExpressionParser()
-		{
+		{	
 			var configuration:ExpressionParserConfiguration = new ExpressionParserConfiguration();
 			
 			var operators:Array = [

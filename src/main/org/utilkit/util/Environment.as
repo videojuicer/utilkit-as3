@@ -23,7 +23,6 @@
  * ***** END LICENSE BLOCK ******/
 package org.utilkit.util
 {
-	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageDisplayState;
 	import flash.external.ExternalInterface;

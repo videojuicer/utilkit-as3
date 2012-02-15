@@ -24,8 +24,10 @@
 package org.utilkit.parser
 {
 	
+	import flash.errors.IllegalOperationError;
+	
 	import org.utilkit.crypto.Base64;
-	import flash.errors.IllegalOperationError;	
+
 	/**
 	 * Parses a Data URI, the content of which may be either utf-8 or base64 encoded, and provides
 	 * helper methods to access the content type, contained data and other information.

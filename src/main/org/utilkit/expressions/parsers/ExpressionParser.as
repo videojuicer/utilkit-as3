@@ -23,7 +23,6 @@
  * ***** END LICENSE BLOCK ******/
 package org.utilkit.expressions.parsers
 {
-	import org.utilkit.constants.AlgebraicOperator;
 	import org.utilkit.expressions.ExpressionContext;
 	import org.utilkit.expressions.ExpressionParserConfiguration;
 

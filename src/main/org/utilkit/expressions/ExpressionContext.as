@@ -24,7 +24,6 @@
 package org.utilkit.expressions
 {
 	import org.utilkit.expressions.parsers.ExpressionParser;
-	import org.utilkit.util.StringUtil;
 
 	public class ExpressionContext
 	{

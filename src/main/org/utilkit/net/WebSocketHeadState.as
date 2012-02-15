@@ -23,7 +23,7 @@
  * ***** END LICENSE BLOCK ******/
 package org.utilkit.net
 {
-	import flash.utils.ByteArray;
+	
 	
 	public class WebSocketHeadState extends WebSocketState
 	{
