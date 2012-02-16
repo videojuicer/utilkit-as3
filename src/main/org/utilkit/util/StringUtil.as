@@ -67,5 +67,31 @@ package org.utilkit.util
 				return (str1.toLowerCase() == str2.toLowerCase());
 			}
 		}
+		
+		public static function rtrimWith(str:String, delimiter:String):String
+		{
+			for (var i:uint = (str.length - 1); i > 0; i--)
+			{
+				if (str.charAt(i) != delimiter)
+				{
+					return str.substr(0, i + 1);
+				}
+			}
+			
+			return "";
+		}
+		
+		public static function ltrimWith(str:String, delimiter:String):String
+		{
+			for (var i:uint = 0; i < str.length; i++)
+			{
+				if (str.charAt(i) != delimiter)
+				{
+					return str.substr(i);
+				}
+			}
+			
+			return "";
+		}
 	}
 }

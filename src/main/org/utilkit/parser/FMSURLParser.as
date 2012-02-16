@@ -23,6 +23,8 @@
  * ***** END LICENSE BLOCK ******/
 package org.utilkit.parser
 {
+	import org.utilkit.util.StringUtil;
+
 	public class FMSURLParser extends URLParser
 	{
 		protected var _useInstance:Boolean = false;
@@ -129,40 +131,47 @@ package org.utilkit.parser
 			}
 			
 			var result:Array = this.path.split(/(\/)/);
+			//result = result..filter(function(item:*, index:int, array:Array):Boolean { return (item != "/" && item != "\\"); });
 			
 			if (result != null)
 			{
 				this._applicationName = result[FMSURLParser.APPLICATION_NAME_INDEX];
 				this._instanceName = "";
-
+				
 				// are we using an instance?
-				if (this.path.search(new RegExp("^.*\/"+FMSURLParser.DEFAULT_INSTANCE_NAME, "i")) > -1)
+				if (this.path.search(new RegExp("\/"+FMSURLParser.DEFAULT_INSTANCE_NAME, "i")) > -1)
 				{
 					this._useInstance = true;
 				}
 				
-				/*
+				var streamNameIndex:uint = FMSURLParser.STREAM_NAME_INDEX;
+				
 				if (this._useInstance)
 				{
-					this._instanceName = result[FMSURLParser.INSTANCE_NAME_INDEX];
+					var instanceIndex:uint = result.indexOf(FMSURLParser.DEFAULT_INSTANCE_NAME);
+					
+					for (var j:uint = (FMSURLParser.APPLICATION_NAME_INDEX + 1); j < instanceIndex; j++)
+					{
+						this._applicationName += result[j];
+					}
+					
+					this._applicationName = StringUtil.rtrimWith(this._applicationName, '/');
+					
+					this._instanceName = result[instanceIndex];
+					streamNameIndex = (instanceIndex + 1);
 				}
-				else
-				{
-					streamNameIndex = FMSURLParser.INSTANCE_NAME_INDEX;
-				}
-				*/
 				
 				if (this._streamName == "" || this._streamName == null)
 				{
 					this._streamName = "";
-					
-					var streamNameIndex:uint = FMSURLParser.STREAM_NAME_INDEX;
 					
 					// search for the stream name
 					for (var i:uint = streamNameIndex; i < result.length; i++)
 					{
 						this._streamName += result[i];
 					}
+					
+					this._streamName = StringUtil.ltrimWith(this._streamName, '/');
 					
 					if (this._streamName == null || this._streamName == "")
 					{
