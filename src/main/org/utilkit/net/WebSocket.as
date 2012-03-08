@@ -769,7 +769,7 @@ package org.utilkit.net
 					buffer.position = firstBytePosition + 1;
 					
 					var data:ByteArray = new ByteArray();
-					var length:int = (offset - firstBytePosition);
+					var length:int = (offset - firstBytePosition) - 1;
 					
 					UtilKit.logger.info("Reading message packet from "+firstBytePosition+" with a length of "+length);
 					

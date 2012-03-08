@@ -76,6 +76,7 @@
             
             <library-path dir="${utilkit.libs}" append="true">
 				<include name="as3crypto.swc" />
+                <include name="blooddy_crypto.swc" />
 			</library-path>
             
             <compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
@@ -104,10 +105,11 @@
             <source-path path-element="${utilkit.src.test}" />
             
       			<library-path dir="${utilkit.libs}" append="true">
-							<include name="as3crypto.swc" />
-							<include name="flexunit-4.1.0_RC2-4-as3_4.1.0.16076.swc" />
-							<include name="flexunit-cilistener-4.1.0_RC2-4-4.1.0.16076.swc" />
-						</library-path>
+					<include name="as3crypto.swc" />
+                    <include name="blooddy_crypto.swc" />
+					<include name="flexunit-4.1.0_RC2-4-as3_4.1.0.16076.swc" />
+					<include name="flexunit-cilistener-4.1.0_RC2-4-4.1.0.16076.swc" />
+				</library-path>
             
             <compiler.verbose-stacktraces>true</compiler.verbose-stacktraces>
             <compiler.headless-server>true</compiler.headless-server>
