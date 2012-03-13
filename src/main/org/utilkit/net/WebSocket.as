@@ -588,7 +588,7 @@ package org.utilkit.net
 			var bytes1:String = this.keyToBytes(key1);
 			var bytes2:String = this.keyToBytes(key2);
 			
-			return MD5.hash(bytes1 + bytes2 + key3);
+			return MD5.rstr_md5(bytes1 + bytes2 + key3);
 		}
 		
 		private function keyToBytes(key:String):String
