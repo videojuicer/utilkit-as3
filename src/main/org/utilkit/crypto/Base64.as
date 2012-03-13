@@ -46,16 +46,13 @@ package org.utilkit.crypto
 		
 		public static function decode(data:String):String
 		{
-			try
+			var bytes:ByteArray = Base64.decodeToByteArray(data);
+			
+			if (bytes != null)
 			{
-				var bytes:ByteArray = Base64.decodeToByteArray(data);
 				bytes.position = 0;
-				
+			
 				return bytes.readUTFBytes(bytes.length);
-			}
-			catch (e:Error)
-			{
-				
 			}
 			
 			return "";
@@ -63,7 +60,16 @@ package org.utilkit.crypto
 		
 		public static function decodeToByteArray(data:String):ByteArray
 		{
-			return by.blooddy.crypto.Base64.decode(data);
+			try
+			{
+				return by.blooddy.crypto.Base64.decode(data);
+			}
+			catch (e:Error)
+			{
+				
+			}
+			
+			return null;
 		}
 	}
 }
