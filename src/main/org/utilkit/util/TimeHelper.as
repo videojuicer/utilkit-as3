@@ -122,6 +122,11 @@ package org.utilkit.util
 				{
 					milliseconds = parseFloat(timeString.substring(0, timeString.indexOf("s"))) * 1000; 
 				}
+				// minutes (similar to .at)
+				else if (timeString.indexOf("m") != -1)
+				{
+					milliseconds = parseFloat(timeString.substring(0, timeString.indexOf("m"))) * 60 * 1000; 
+				}
 				// assume the time is declared in seconds
 				else
 				{
