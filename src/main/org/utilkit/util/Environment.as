@@ -42,6 +42,16 @@ package org.utilkit.util
 			Environment.__stageRoot = stage;
 		}
 		
+		public static function get applicationURL():String
+		{
+			return Environment.__stageRoot.loaderInfo.url;
+		}
+		
+		public static function get isSecureApplication():Boolean
+		{
+			return (Environment.applicationURL.indexOf("https") != -1);
+		}
+		
 		public static function get embeddedURL():String
 		{
 			var location:String = Environment.callExternalMethod("document.location.toString") as String;
