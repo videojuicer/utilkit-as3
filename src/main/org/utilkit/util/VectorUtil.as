@@ -45,5 +45,70 @@ package org.utilkit.util
 			
 			return result;
 		}
+		
+		public static function sort(vector:Vector.<Object>, compareFunction:Function):void
+		{
+			if (vector.length < 2) return;
+			
+			var firstHalf : uint = Math.floor(vector.length / 2);
+			var secondHalf : uint = vector.length - firstHalf;
+			
+			var arr1:Vector.<Object> = new Vector.<Object>();
+			var arr2:Vector.<Object> = new Vector.<Object>();
+			
+			var i : uint = 0;
+			
+			for (i = 0; i < firstHalf; ++i)
+			{
+				arr1[i] = vector[i];
+			}
+			
+			for (i = firstHalf; i < firstHalf + secondHalf; ++i)
+			{
+				arr2[i - firstHalf] = vector[i];
+			}
+			
+			VectorUtil.sort(arr1, compareFunction);
+			VectorUtil.sort(arr2, compareFunction);
+			
+			i = 0;
+			
+			var j : uint = 0;
+			var k : uint = 0;
+			
+			while (arr1.length != j && arr2.length != k)
+			{
+				if (compareFunction(arr1[j], arr2[k]) != 1)
+				{
+					vector[i] = arr1[j];
+					
+					i++;
+					j++;
+				}
+				else
+				{
+					vector[i] = arr2[k];
+					
+					i++;
+					k++;
+				}
+			}
+			
+			while (arr1.length != j)
+			{
+				vector[i] = arr1[j];
+				
+				i++;
+				j++;
+			}
+			
+			while (arr2.length != k)
+			{
+				vector[i] = arr2[k];
+				
+				i++;
+				k++;
+			}
+		}
 	}
 }
