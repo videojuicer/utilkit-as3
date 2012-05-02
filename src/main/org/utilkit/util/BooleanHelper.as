@@ -43,10 +43,8 @@ package org.utilkit.util
 				case "nope":
 				case "0":
 				case 0:
-					result = false;
-					break;
 				default:
-					result = new Boolean(value);
+					result = false;
 					break;
 			}
 			
