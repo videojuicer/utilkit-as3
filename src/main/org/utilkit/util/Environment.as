@@ -49,7 +49,7 @@ package org.utilkit.util
 		
 		public static function get isSecureApplication():Boolean
 		{
-			return (Environment.applicationURL.indexOf("https") != -1);
+			return (Environment.applicationURL.indexOf("https://") != -1);
 		}
 		
 		public static function get embeddedURL():String
