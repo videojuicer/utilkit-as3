@@ -57,6 +57,10 @@
     <classEntry path="org.utilkit.logger.Benchmark"/>
     <classEntry path="org.utilkit.util.ByteHelper"/>
     <classEntry path="org.utilkit.crypto.GUID"/>
+    <classEntry path="org.utilkit.time.SharedTimer"/>
+    <classEntry path="org.utilkit.util.MathHelper"/>
+    <classEntry path="org.utilkit.time.Times"/>
+    <classEntry path="org.utilkit.time.FileSize"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

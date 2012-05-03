@@ -46,7 +46,7 @@ package org.utilkit
 		 */
 		public function toString():String
 		{
-			return this.major + "." + this.minor + (this.text != null ? this.text : "")  + " " + this.build + " " + (this.date != null ? this.date : "");
+			return this.major + "." + this.minor + "." + this.build + " " + (this.text != null && this.text != "" ? " " + this.text : "") + (this.date != null && this.date != "" ? "(" + this.date : ")");
 		}
 		
 		public function toURLString():String
