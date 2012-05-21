@@ -25,7 +25,7 @@ package org.utilkit.util
 {
 	public class TimeHelper
 	{
-		public static function millisecondsToWallclock(milliseconds:Number):String
+		public static function millisecondsToWallclock(milliseconds:Number, forceHourDisplay:Boolean = false):String
 		{
 			var result:Array = [];
 			
@@ -36,18 +36,13 @@ package org.utilkit.util
 			seconds = seconds % 60;
 			minutes = minutes % 60;
 			
-			if (hours != 0)
+			if (hours != 0 || forceHourDisplay)
 			{
 				result.push(NumberHelper.zeroPad(hours, 2));
 			}
 			
 			result.push(NumberHelper.zeroPad(minutes, 2));
-			
-			if(hours == 0)
-			{
-				result.push(NumberHelper.zeroPad(seconds, 2));
-			}
-			
+			result.push(NumberHelper.zeroPad(seconds, 2));
 			
 			return result.join(":");
 		}
